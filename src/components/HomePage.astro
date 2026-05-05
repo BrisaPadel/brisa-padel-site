@@ -8,7 +8,7 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = translations[lang];
-const switchHref = lang === 'en' ? '/es' : '/';
+const switchHref = lang === 'en' ? '/es/' : '/';
 const switchLabel = lang === 'en' ? 'ES' : 'EN';
 ---
 <div class="home-root" data-lang={lang}>
@@ -19,7 +19,13 @@ const switchLabel = lang === 'en' ? 'ES' : 'EN';
 
   <header class="top-row">
     <a class="login-btn" href="https://stage.brisapadel.com/login" target="_blank" rel="noopener noreferrer">{t.login}</a>
-    <a class="lang-btn" href={switchHref} data-lang-switch="true" data-target-lang={switchLabel.toLowerCase()}>
+    <a
+      class="lang-btn"
+      href={switchHref}
+      data-lang-switch="true"
+      data-target-lang={switchLabel.toLowerCase()}
+      data-target-path={switchHref}
+    >
       <span class="sr-only">{t.language}</span>{switchLabel}
     </a>
   </header>
@@ -56,12 +62,15 @@ const switchLabel = lang === 'en' ? 'ES' : 'EN';
   }
 
   if (langSwitch) {
-    langSwitch.addEventListener('click', () => {
+    langSwitch.addEventListener('click', (event) => {
+      event.preventDefault();
       const targetLang = langSwitch.getAttribute('data-target-lang');
+      const targetPath = langSwitch.getAttribute('data-target-path') || '/';
       if (!targetLang) return;
       try {
         localStorage.setItem('preferred-lang', targetLang);
       } catch {}
+      window.location.assign(`${window.location.origin}${targetPath}`);
     });
   }
 </script>

@@ -14,10 +14,30 @@ const t = translations[lang];
   <a href={lang === 'en' ? '/' : '/es'} class="back">{lang === 'en' ? 'Back' : 'Volver'}</a>
   <div class="brand"><span>|</span><strong>{t.brand} <em>{t.brand2}</em></strong></div>
   <div class="lang">
-    <a href={basePath} class={lang === 'en' ? 'active' : ''}>EN</a>
-    <a href={`/es${basePath}`} class={lang === 'es' ? 'active' : ''}>ES</a>
+    <a
+      href={basePath}
+      data-lang-link="true"
+      data-target-path={basePath}
+      class={lang === 'en' ? 'active' : ''}
+    >EN</a>
+    <a
+      href={`/es${basePath}`}
+      data-lang-link="true"
+      data-target-path={`/es${basePath}`}
+      class={lang === 'es' ? 'active' : ''}
+    >ES</a>
   </div>
 </header>
+
+<script>
+  document.querySelectorAll('[data-lang-link="true"]').forEach((node) => {
+    node.addEventListener('click', (event) => {
+      event.preventDefault();
+      const targetPath = node.getAttribute('data-target-path') || '/';
+      window.location.assign(`${window.location.origin}${targetPath}`);
+    });
+  });
+</script>
 
 <style>
   .sub-head { position: sticky; top: 0; z-index: 20; height: 68px; display:flex; align-items:center; justify-content:space-between; padding: 0 1.2rem; background:#fff; border-bottom:1px solid #eee6dd; }
