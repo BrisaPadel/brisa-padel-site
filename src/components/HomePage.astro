@@ -10,6 +10,10 @@ const { lang } = Astro.props;
 const t = translations[lang];
 const switchHref = lang === 'en' ? '/es/' : '/';
 const switchLabel = lang === 'en' ? 'ES' : 'EN';
+const localizedRequestAccess = lang === 'en' ? '/request-access' : '/es/request-access';
+const localizedContact = lang === 'en' ? '/contact' : '/es/contact';
+const localizedTerms = lang === 'en' ? '/terms' : '/es/terms';
+const localizedPrivacy = lang === 'en' ? '/privacy' : '/es/privacy';
 ---
 <div class="home-root" data-lang={lang}>
   <div class="hero-bg" aria-hidden="true">
@@ -39,15 +43,15 @@ const switchLabel = lang === 'en' ? 'ES' : 'EN';
 
     <h1>{t.homeHeadline1}<br /><em>{t.homeHeadline2}</em></h1>
     <p>{t.homeSub}</p>
-    <a class="cta" href="/request-access">{t.homeCta}</a>
+    <a class="cta" href={localizedRequestAccess}>{t.homeCta}</a>
   </main>
 
   <footer>
-    <a href="/contact">{t.homeContact}</a>
+    <a href={localizedContact}>{t.homeContact}</a>
     <span>|</span>
-    <a href="/terms">{t.homeTerms}</a>
+    <a href={localizedTerms}>{t.homeTerms}</a>
     <span>|</span>
-    <a href="/privacy">{t.homePrivacy}</a>
+    <a href={localizedPrivacy}>{t.homePrivacy}</a>
   </footer>
 </div>
 
