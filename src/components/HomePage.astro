@@ -1,0 +1,237 @@
+---
+import type { Lang } from '../data/i18n';
+import { HERO_IMG, translations } from '../data/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = translations[lang];
+const switchHref = lang === 'en' ? '/es' : '/';
+const switchLabel = lang === 'en' ? 'ES' : 'EN';
+---
+<div class="home-root" data-lang={lang}>
+  <div class="hero-bg" aria-hidden="true">
+    <img src={HERO_IMG} alt={t.altHero} loading="eager" fetchpriority="high" />
+    <div class="hero-overlay"></div>
+  </div>
+
+  <header class="top-row">
+    <a class="login-btn" href="https://stage.brisapadel.com/login" target="_blank" rel="noopener noreferrer">{t.login}</a>
+    <a class="lang-btn" href={switchHref} data-lang-switch="true" data-target-lang={switchLabel.toLowerCase()}>
+      <span class="sr-only">{t.language}</span>{switchLabel}
+    </a>
+  </header>
+
+  <main class="hero-content">
+    <div class="wordmark" aria-label="Brisa Padel">
+      <span>|</span>
+      <strong>{t.brand} <em>{t.brand2}</em></strong>
+      <span>|</span>
+    </div>
+
+    <h1>{t.homeHeadline1}<br /><em>{t.homeHeadline2}</em></h1>
+    <p>{t.homeSub}</p>
+    <a class="cta" href="/request-access">{t.homeCta}</a>
+  </main>
+
+  <footer>
+    <a href="/contact">{t.homeContact}</a>
+    <span>|</span>
+    <a href="/terms">{t.homeTerms}</a>
+    <span>|</span>
+    <a href="/privacy">{t.homePrivacy}</a>
+  </footer>
+</div>
+
+<script>
+  const root = document.querySelector('.home-root');
+  const langSwitch = document.querySelector('[data-lang-switch="true"]');
+  if (root) {
+    const currentLang = root.getAttribute('data-lang') || 'en';
+    try {
+      localStorage.setItem('preferred-lang', currentLang);
+    } catch {}
+  }
+
+  if (langSwitch) {
+    langSwitch.addEventListener('click', () => {
+      const targetLang = langSwitch.getAttribute('data-target-lang');
+      if (!targetLang) return;
+      try {
+        localStorage.setItem('preferred-lang', targetLang);
+      } catch {}
+    });
+  }
+</script>
+
+<style>
+  .home-root {
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    color: #fff;
+    padding: 1.5rem;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: ken-burns 20s ease-in-out infinite alternate;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.65));
+  }
+
+  .top-row {
+    z-index: 1;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .login-btn,
+  .lang-btn {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.3);
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.45rem 0.8rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .login-btn:hover,
+  .lang-btn:hover {
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+  }
+
+  .hero-content {
+    z-index: 1;
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .wordmark {
+    margin-bottom: 1.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.35rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .wordmark span,
+  .wordmark em {
+    color: var(--brand-orange);
+    font-style: normal;
+  }
+
+  h1 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(2.6rem, 8vw, 5rem);
+    line-height: 1.06;
+    margin: 0;
+    max-width: 50rem;
+  }
+
+  h1 em {
+    color: var(--brand-orange);
+    font-style: italic;
+  }
+
+  p {
+    margin: 1.2rem 0 2.1rem;
+    color: rgba(255, 255, 255, 0.78);
+    max-width: 26rem;
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+    font-size: 0.98rem;
+  }
+
+  .cta {
+    background: var(--brand-orange);
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 1rem 2.2rem;
+    box-shadow: 0 10px 28px rgba(242, 100, 25, 0.38);
+    transition: background-color 0.2s ease;
+  }
+
+  .cta:hover {
+    background: var(--brand-orange-dark);
+  }
+
+  footer {
+    z-index: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    align-items: center;
+    padding: 1.2rem 0 0.2rem;
+  }
+
+  footer a {
+    color: rgba(255, 255, 255, 0.62);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  footer a:hover {
+    color: #fff;
+  }
+
+  footer span {
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  @media (max-width: 600px) {
+    .home-root {
+      padding: 1rem;
+    }
+
+    .wordmark {
+      letter-spacing: 0.18em;
+      font-size: 1.1rem;
+    }
+
+    .cta {
+      width: 100%;
+      max-width: 18rem;
+    }
+  }
+</style>

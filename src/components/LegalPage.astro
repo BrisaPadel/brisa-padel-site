@@ -1,0 +1,46 @@
+---
+import type { Lang } from '../data/i18n';
+import SubpageHeader from './SubpageHeader.astro';
+
+interface Props {
+  lang: Lang;
+  kind: 'terms' | 'privacy';
+  sections: { title: string; body: string }[];
+}
+
+const { lang, kind, sections } = Astro.props;
+const title = kind === 'terms'
+  ? (lang === 'en' ? 'Terms of Service' : 'Términos y Condiciones')
+  : (lang === 'en' ? 'Privacy Policy' : 'Política de Privacidad');
+const updated = lang === 'en' ? 'Last updated: March 8, 2026' : 'Última actualización: 8 de marzo de 2026';
+const basePath = kind === 'terms' ? '/terms' : '/privacy';
+---
+<div class="subpage">
+  <SubpageHeader lang={lang} basePath={basePath} />
+  <main>
+    <p class="label">Legal</p>
+    <h1>{title}</h1>
+    <p class="meta">Kapur Capital LLC d/b/a Brisa Padel</p>
+    <p class="meta m2">{updated}</p>
+    <div class="sections">
+      {sections.map((s) => (
+        <section>
+          <h2>{s.title}</h2>
+          <p>{s.body}</p>
+        </section>
+      ))}
+    </div>
+  </main>
+</div>
+
+<style>
+  .subpage { min-height: 100vh; background: #faf8f5; }
+  main { max-width: 760px; margin: 0 auto; padding: 3.5rem 1.5rem; }
+  .label { margin: 0 0 .75rem; font-size: .72rem; text-transform: uppercase; letter-spacing: .16em; color: #8b8178; font-weight: 700; }
+  h1 { font-family:"Cormorant Garamond", serif; font-size: clamp(2rem, 5vw, 3.3rem); margin: 0 0 .5rem; color:#1c1917; }
+  .meta { color:#a8a29e; font-size: .76rem; letter-spacing:.04em; margin:0; }
+  .m2 { margin-bottom: 2.5rem; }
+  .sections { display:flex; flex-direction:column; gap:2rem; color:#57534e; }
+  h2 { font-family:"Cormorant Garamond", serif; border-left:2px solid var(--brand-orange); padding-left:.8rem; color:#1c1917; margin:0 0 .7rem; font-size:1.42rem; }
+  section p { margin:0; white-space: pre-line; line-height:1.65; font-size:.94rem; }
+</style>

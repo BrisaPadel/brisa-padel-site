@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HomePage from '../components/HomePage.astro';
+import { translations } from '../data/i18n';
+
+const t = translations.en;
+---
+<BaseLayout title={t.pageTitle} description={t.pageDescription} lang="en" canonicalPath="/">
+  <HomePage lang="en" />
+  <script>
+    try {
+      const preferred = localStorage.getItem('preferred-lang');
+      if (preferred === 'es') {
+        window.location.replace('/es');
+      }
+    } catch {}
+  </script>
+</BaseLayout>

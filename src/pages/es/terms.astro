@@ -1,0 +1,8 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LegalPage from '../../components/LegalPage.astro';
+import { termsEs } from '../../data/legal';
+---
+<BaseLayout title="Términos | Brisa Padel" description="Términos de servicio de Brisa Padel." lang="es" canonicalPath="/es/terms">
+  <LegalPage lang="es" kind="terms" sections={termsEs} />
+</BaseLayout>
