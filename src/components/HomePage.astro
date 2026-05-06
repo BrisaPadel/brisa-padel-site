@@ -86,7 +86,7 @@ const localizedPrivacy = lang === 'en' ? siteUrl('/privacy') : siteUrl('/es/priv
   const appSubdomainMatch = location.host.match(/^app\.(.+)\.brisapadel\.com$/);
   if (appSubdomainMatch) {
     const targetHost = `${appSubdomainMatch[1]}.brisapadel.com`;
-    location.replace(`${location.protocol}//${targetHost}${location.pathname}${location.search}${location.hash}`);
+    location.replace(`${location.protocol}//${targetHost}`);
   }
 
   const root = document.querySelector('.home-root');
