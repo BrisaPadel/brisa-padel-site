@@ -12,6 +12,7 @@ const t = translations[lang];
 const enHref = siteUrl('/');
 const esHref = siteUrl('/es/');
 const loginHref = webUrl('/login');
+const requestAccessPath = lang === 'en' ? '/request-access' : '/es/request-access';
 const localizedRequestAccess = lang === 'en' ? webUrl('/request-access') : webUrl('/es/request-access');
 const localizedContact = lang === 'en' ? siteUrl('/contact') : siteUrl('/es/contact');
 const localizedTerms = lang === 'en' ? siteUrl('/terms') : siteUrl('/es/terms');
@@ -24,7 +25,7 @@ const localizedPrivacy = lang === 'en' ? siteUrl('/privacy') : siteUrl('/es/priv
   </div>
 
   <div class="login-wrap">
-    <a class="login-btn" href={loginHref}>
+    <a class="login-btn" href={loginHref} data-app-link="true" data-app-path="/login">
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
         <circle cx="12" cy="7" r="4"></circle>
@@ -63,7 +64,7 @@ const localizedPrivacy = lang === 'en' ? siteUrl('/privacy') : siteUrl('/es/priv
 
     <h1>{t.homeHeadline1}<br /><em>{t.homeHeadline2}</em></h1>
     <p>{t.homeSub}</p>
-    <a class="cta" href={localizedRequestAccess}>{t.homeCta}</a>
+    <a class="cta" href={localizedRequestAccess} data-app-link="true" data-app-path={requestAccessPath}>{t.homeCta}</a>
   </main>
 
   <footer>
@@ -84,6 +85,7 @@ const localizedPrivacy = lang === 'en' ? siteUrl('/privacy') : siteUrl('/es/priv
 <script>
   const root = document.querySelector('.home-root');
   const langSwitches = document.querySelectorAll('[data-lang-switch="true"]');
+  const appLinks = document.querySelectorAll('[data-app-link="true"]');
   if (root) {
     const currentLang = root.getAttribute('data-lang') || 'en';
     try {
@@ -102,6 +104,14 @@ const localizedPrivacy = lang === 'en' ? siteUrl('/privacy') : siteUrl('/es/priv
       } catch {}
       window.location.assign(targetPath);
     });
+  });
+
+  const appHost = location.host.startsWith('app.') ? location.host : `app.${location.host}`;
+  const appBase = `${location.protocol}//${appHost}`;
+  appLinks.forEach((link) => {
+    const path = link.getAttribute('data-app-path');
+    if (!path) return;
+    link.setAttribute('href', `${appBase}${path}`);
   });
 </script>
 
@@ -302,7 +312,7 @@ const localizedPrivacy = lang === 'en' ? siteUrl('/privacy') : siteUrl('/es/priv
     gap: 0.98rem;
     align-items: center;
     flex-wrap: nowrap;
-    padding: 2.4rem 1.5rem 0.55rem;
+    padding: 2.8rem 1.5rem 0.55rem;
   }
 
   footer a {
