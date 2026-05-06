@@ -34,7 +34,7 @@ const t = translations[lang];
     <section id="contact-success" hidden>
       <h2>{lang === 'en' ? 'Message Sent' : 'Mensaje Enviado'}</h2>
       <p>{lang === 'en' ? "Thank you for reaching out. We'll get back to you within one business day." : 'Gracias por contactarnos. Te responderemos dentro de un día hábil.'}</p>
-      <a href={lang === 'en' ? '/' : '/es'}>{lang === 'en' ? 'Return Home' : 'Volver al Inicio'}</a>
+      <a href={lang === 'en' ? '/home' : '/es/home'}>{lang === 'en' ? 'Return Home' : 'Volver al Inicio'}</a>
     </section>
   </main>
 </div>

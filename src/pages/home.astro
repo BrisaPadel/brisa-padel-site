@@ -1,0 +1,10 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HomePage from '../components/HomePage.astro';
+import { translations } from '../data/i18n';
+
+const t = translations.en;
+---
+<BaseLayout title={t.pageTitle} description={t.pageDescription} lang="en" canonicalPath="/home">
+  <HomePage lang="en" />
+</BaseLayout>

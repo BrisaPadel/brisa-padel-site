@@ -10,6 +10,7 @@ const { lang } = Astro.props;
 const t = translations[lang];
 const switchHref = lang === 'en' ? '/es/' : '/';
 const switchLabel = lang === 'en' ? 'ES' : 'EN';
+const localizedRequestAccess = lang === 'en' ? '/request-access' : '/es/request-access';
 const localizedMembership = lang === 'en' ? '/membership' : '/es/membership';
 const localizedAbout = lang === 'en' ? '/about' : '/es/about';
 const localizedContact = lang === 'en' ? '/contact' : '/es/contact';
@@ -23,7 +24,7 @@ const localizedPrivacy = lang === 'en' ? '/privacy' : '/es/privacy';
   </div>
 
   <header class="top-row">
-    <a class="login-btn" href="https://stage.brisapadel.com/login" target="_blank" rel="noopener noreferrer">{t.login}</a>
+    <a class="login-btn" href="/login">{t.login}</a>
     <a
       class="lang-btn"
       href={switchHref}
@@ -44,7 +45,7 @@ const localizedPrivacy = lang === 'en' ? '/privacy' : '/es/privacy';
 
     <h1>{t.homeHeadline1}<br /><em>{t.homeHeadline2}</em></h1>
     <p>{t.homeSub}</p>
-    <a class="cta" href={localizedMembership}>{t.homeCta}</a>
+    <a class="cta" href={localizedRequestAccess}>{t.homeCta}</a>
   </main>
 
   <footer>
