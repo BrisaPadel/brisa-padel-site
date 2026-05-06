@@ -9,12 +9,10 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = translations[lang];
-const switchHref = lang === 'en' ? siteUrl('/es/') : siteUrl('/');
-const switchLabel = lang === 'en' ? 'ES' : 'EN';
+const enHref = siteUrl('/');
+const esHref = siteUrl('/es/');
 const loginHref = webUrl('/login');
 const localizedRequestAccess = lang === 'en' ? webUrl('/request-access') : webUrl('/es/request-access');
-const localizedMembership = lang === 'en' ? siteUrl('/membership') : siteUrl('/es/membership');
-const localizedAbout = lang === 'en' ? siteUrl('/about') : siteUrl('/es/about');
 const localizedContact = lang === 'en' ? siteUrl('/contact') : siteUrl('/es/contact');
 const localizedTerms = lang === 'en' ? siteUrl('/terms') : siteUrl('/es/terms');
 const localizedPrivacy = lang === 'en' ? siteUrl('/privacy') : siteUrl('/es/privacy');
@@ -25,18 +23,36 @@ const localizedPrivacy = lang === 'en' ? siteUrl('/privacy') : siteUrl('/es/priv
     <div class="hero-overlay"></div>
   </div>
 
-  <header class="top-row">
-    <a class="login-btn" href={loginHref}>{t.login}</a>
-    <a
-      class="lang-btn"
-      href={switchHref}
-      data-lang-switch="true"
-      data-target-lang={switchLabel.toLowerCase()}
-      data-target-path={switchHref}
-    >
-      <span class="sr-only">{t.language}</span>{switchLabel}
+  <div class="login-wrap">
+    <a class="login-btn" href={loginHref}>
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      {t.login}
     </a>
-  </header>
+  </div>
+
+  <div class="lang-switch" role="group" aria-label={t.language}>
+      <a
+        class:list={['lang-btn', { active: lang === 'en' }]}
+        href={enHref}
+        data-lang-switch="true"
+        data-target-lang="en"
+        data-target-path={enHref}
+      >
+        EN
+      </a>
+      <a
+        class:list={['lang-btn', { active: lang === 'es' }]}
+        href={esHref}
+        data-lang-switch="true"
+        data-target-lang="es"
+        data-target-path={esHref}
+      >
+        ES
+      </a>
+  </div>
 
   <main class="hero-content">
     <div class="wordmark" aria-label="Brisa Padel">
@@ -51,9 +67,11 @@ const localizedPrivacy = lang === 'en' ? siteUrl('/privacy') : siteUrl('/es/priv
   </main>
 
   <footer>
-    <a href={localizedAbout}>{lang === 'en' ? 'About' : 'Nosotros'}</a>
+    <a href={lang === 'en' ? siteUrl('/about') : siteUrl('/es/about')}>{lang === 'en' ? 'About' : 'Nosotros'}</a>
     <span>|</span>
-    <a href={localizedMembership}>{lang === 'en' ? 'Membership' : 'Membresía'}</a>
+    <a href={lang === 'en' ? siteUrl('/membership') : siteUrl('/es/membership')}>
+      {lang === 'en' ? 'Membership' : 'Membresía'}
+    </a>
     <span>|</span>
     <a href={localizedContact}>{t.homeContact}</a>
     <span>|</span>
@@ -65,7 +83,7 @@ const localizedPrivacy = lang === 'en' ? siteUrl('/privacy') : siteUrl('/es/priv
 
 <script>
   const root = document.querySelector('.home-root');
-  const langSwitch = document.querySelector('[data-lang-switch="true"]');
+  const langSwitches = document.querySelectorAll('[data-lang-switch="true"]');
   if (root) {
     const currentLang = root.getAttribute('data-lang') || 'en';
     try {
@@ -73,7 +91,7 @@ const localizedPrivacy = lang === 'en' ? siteUrl('/privacy') : siteUrl('/es/priv
     } catch {}
   }
 
-  if (langSwitch) {
+  langSwitches.forEach((langSwitch) => {
     langSwitch.addEventListener('click', (event) => {
       event.preventDefault();
       const targetLang = langSwitch.getAttribute('data-target-lang');
@@ -84,7 +102,7 @@ const localizedPrivacy = lang === 'en' ? siteUrl('/privacy') : siteUrl('/es/priv
       } catch {}
       window.location.assign(targetPath);
     });
-  }
+  });
 </script>
 
 <style>
@@ -96,6 +114,7 @@ const localizedPrivacy = lang === 'en' ? siteUrl('/privacy') : siteUrl('/es/priv
     overflow: hidden;
     color: #fff;
     padding: 1.5rem;
+    font-family: var(--font-sans);
   }
 
   .hero-bg {
@@ -108,7 +127,9 @@ const localizedPrivacy = lang === 'en' ? siteUrl('/privacy') : siteUrl('/es/priv
     width: 100%;
     height: 100%;
     object-fit: cover;
-    animation: ken-burns 20s ease-in-out infinite alternate;
+    object-position: center center;
+    transform: none;
+    animation: none;
   }
 
   .hero-overlay {
@@ -117,26 +138,71 @@ const localizedPrivacy = lang === 'en' ? siteUrl('/privacy') : siteUrl('/es/priv
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.65));
   }
 
-  .top-row {
-    z-index: 1;
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .login-wrap {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 20;
   }
 
   .login-btn,
   .lang-btn {
     border: 1px solid rgba(255, 255, 255, 0.3);
     background: rgba(0, 0, 0, 0.3);
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
     font-size: 0.75rem;
-    letter-spacing: 0.15em;
-    font-weight: 700;
+    line-height: 1rem;
+    letter-spacing: 0.1em;
+    font-weight: 600;
     text-transform: uppercase;
-    padding: 0.45rem 0.8rem;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    padding: 0.375rem 0.75rem;
+    transition: all 0.2s ease;
+  }
+
+  .login-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .login-btn svg {
+    width: 12px;
+    height: 12px;
+    flex: 0 0 auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transform: translateY(-0.1px);
+  }
+
+  .lang-switch {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 20;
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    overflow: hidden;
+  }
+
+  .lang-switch .lang-btn {
+    border: 0;
+    min-width: auto;
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 0.375rem 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .lang-switch .lang-btn.active {
+    background: var(--brand-orange);
+    color: #fff;
   }
 
   .login-btn:hover,
@@ -154,58 +220,73 @@ const localizedPrivacy = lang === 'en' ? siteUrl('/privacy') : siteUrl('/es/priv
     align-items: center;
     justify-content: center;
     text-align: center;
+    padding: 0 1.5rem;
+    margin-top: 0;
   }
 
   .wordmark {
-    margin-bottom: 1.8rem;
+    margin-bottom: 2rem;
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
-    font-family: "Cormorant Garamond", serif;
-    font-size: 1.35rem;
-    letter-spacing: 0.28em;
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    letter-spacing: 0.35em;
     text-transform: uppercase;
     font-weight: 700;
   }
 
-  .wordmark span,
+  .wordmark span {
+    color: var(--brand-orange);
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+  }
+
   .wordmark em {
     color: var(--brand-orange);
     font-style: normal;
   }
 
   h1 {
-    font-family: "Cormorant Garamond", serif;
-    font-size: clamp(2.6rem, 8vw, 5rem);
-    line-height: 1.06;
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.05;
     margin: 0;
-    max-width: 50rem;
+    margin-bottom: 1.5rem;
+    max-width: 48rem;
   }
 
   h1 em {
     color: var(--brand-orange);
     font-style: italic;
+    font-weight: 700;
   }
 
   p {
-    margin: 1.2rem 0 2.1rem;
-    color: rgba(255, 255, 255, 0.78);
-    max-width: 26rem;
-    line-height: 1.6;
-    letter-spacing: 0.02em;
-    font-size: 0.98rem;
+    margin: 0 0 2.5rem;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 28rem;
+    line-height: 1.625;
+    letter-spacing: 0.025em;
+    font-size: 0.875rem;
+    font-weight: 400;
   }
 
   .cta {
     background: var(--brand-orange);
     color: #fff;
     text-decoration: none;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
     letter-spacing: 0.2em;
     font-weight: 700;
     text-transform: uppercase;
-    padding: 1rem 2.2rem;
-    box-shadow: 0 10px 28px rgba(242, 100, 25, 0.38);
+    padding: 1rem 2.5rem;
+    box-shadow: 0 10px 15px -3px rgba(242, 100, 25, 0.3), 0 4px 6px -4px rgba(242, 100, 25, 0.3);
     transition: background-color 0.2s ease;
   }
 
@@ -214,22 +295,25 @@ const localizedPrivacy = lang === 'en' ? siteUrl('/privacy') : siteUrl('/es/priv
   }
 
   footer {
-    z-index: 1;
+    z-index: 10;
     position: relative;
     display: flex;
     justify-content: center;
-    gap: 0.8rem;
+    gap: 0.98rem;
     align-items: center;
-    padding: 1.2rem 0 0.2rem;
+    flex-wrap: nowrap;
+    padding: 2.4rem 1.5rem 0.55rem;
   }
 
   footer a {
-    color: rgba(255, 255, 255, 0.62);
+    color: rgba(255, 255, 255, 0.5);
     text-decoration: none;
     text-transform: uppercase;
-    letter-spacing: 0.16em;
-    font-size: 0.72rem;
-    font-weight: 700;
+    letter-spacing: 0.181em;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    font-weight: 500;
+    font-family: var(--font-sans);
   }
 
   footer a:hover {
@@ -237,7 +321,26 @@ const localizedPrivacy = lang === 'en' ? siteUrl('/privacy') : siteUrl('/es/priv
   }
 
   footer span {
-    color: rgba(255, 255, 255, 0.35);
+    color: rgba(255, 255, 255, 0.25);
+    font-size: 0.75rem;
+    line-height: 1rem;
+    transform: translateY(-0.5px);
+  }
+
+  @media (min-width: 640px) {
+    h1 {
+      font-size: 3.75rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    h1 {
+      font-size: 4.5rem;
+    }
   }
 
   @media (max-width: 600px) {
@@ -245,14 +348,46 @@ const localizedPrivacy = lang === 'en' ? siteUrl('/privacy') : siteUrl('/es/priv
       padding: 1rem;
     }
 
-    .wordmark {
-      letter-spacing: 0.18em;
-      font-size: 1.1rem;
+    .login-wrap {
+      top: 1rem;
+      left: 1rem;
+    }
+
+    .lang-switch {
+      top: 1rem;
+      right: 1rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+    }
+
+    p {
+      font-size: 0.88rem;
+      margin-bottom: 2rem;
     }
 
     .cta {
       width: 100%;
-      max-width: 18rem;
+      max-width: 17rem;
+      padding: 0.95rem 1.6rem;
+    }
+
+    .wordmark {
+      margin-bottom: 1.4rem;
+      font-size: 1rem;
+      gap: 0.5rem;
+      letter-spacing: 0.35em;
+    }
+
+    .hero-content {
+      margin-top: -1.2vh;
+    }
+
+    footer {
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      padding: 1.9rem 1rem 0.5rem;
     }
   }
 </style>
