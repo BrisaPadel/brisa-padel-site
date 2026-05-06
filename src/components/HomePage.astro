@@ -10,7 +10,8 @@ const { lang } = Astro.props;
 const t = translations[lang];
 const switchHref = lang === 'en' ? '/es/' : '/';
 const switchLabel = lang === 'en' ? 'ES' : 'EN';
-const localizedRequestAccess = lang === 'en' ? '/request-access' : '/es/request-access';
+const localizedMembership = lang === 'en' ? '/membership' : '/es/membership';
+const localizedAbout = lang === 'en' ? '/about' : '/es/about';
 const localizedContact = lang === 'en' ? '/contact' : '/es/contact';
 const localizedTerms = lang === 'en' ? '/terms' : '/es/terms';
 const localizedPrivacy = lang === 'en' ? '/privacy' : '/es/privacy';
@@ -43,10 +44,14 @@ const localizedPrivacy = lang === 'en' ? '/privacy' : '/es/privacy';
 
     <h1>{t.homeHeadline1}<br /><em>{t.homeHeadline2}</em></h1>
     <p>{t.homeSub}</p>
-    <a class="cta" href={localizedRequestAccess}>{t.homeCta}</a>
+    <a class="cta" href={localizedMembership}>{t.homeCta}</a>
   </main>
 
   <footer>
+    <a href={localizedAbout}>{lang === 'en' ? 'About' : 'Nosotros'}</a>
+    <span>|</span>
+    <a href={localizedMembership}>{lang === 'en' ? 'Membership' : 'Membresía'}</a>
+    <span>|</span>
     <a href={localizedContact}>{t.homeContact}</a>
     <span>|</span>
     <a href={localizedTerms}>{t.homeTerms}</a>
@@ -153,7 +158,7 @@ const localizedPrivacy = lang === 'en' ? '/privacy' : '/es/privacy';
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
-    font-family: "Cormorant Garamond", serif;
+    font-family: var(--font-display);
     font-size: 1.35rem;
     letter-spacing: 0.28em;
     text-transform: uppercase;
@@ -167,7 +172,7 @@ const localizedPrivacy = lang === 'en' ? '/privacy' : '/es/privacy';
   }
 
   h1 {
-    font-family: "Cormorant Garamond", serif;
+    font-family: var(--font-display);
     font-size: clamp(2.6rem, 8vw, 5rem);
     line-height: 1.06;
     margin: 0;
