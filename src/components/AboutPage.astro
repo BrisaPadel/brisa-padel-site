@@ -1,6 +1,7 @@
 ---
 import type { Lang } from '../data/i18n';
 import SubpageHeader from './SubpageHeader.astro';
+import { siteUrl } from '../data/urls';
 
 interface Props {
   lang: Lang;
@@ -8,6 +9,7 @@ interface Props {
 
 const { lang } = Astro.props;
 const isEs = lang === 'es';
+const contactHref = isEs ? siteUrl('/es/contact') : siteUrl('/contact');
 ---
 <div class="subpage">
   <SubpageHeader lang={lang} basePath="/about" />
@@ -63,7 +65,7 @@ const isEs = lang === 'es';
     <section>
       <h2>{isEs ? 'Contacto' : 'Get in touch'}</h2>
       <p>{isEs ? 'Si eres jugador, coach o club y quieres colaborar, escríbenos.' : "If you're a player, coach, or club interested in working with us, contact us."}</p>
-      <a class="cta" href={isEs ? '/es/contact' : '/contact'}>{isEs ? 'Contactar' : 'Contact us'}</a>
+      <a class="cta" href={contactHref}>{isEs ? 'Contactar' : 'Contact us'}</a>
     </section>
   </main>
 </div>

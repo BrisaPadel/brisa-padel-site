@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://www.brisapadel.com',
+  site: 'https://website.brisapadel.com',
   integrations: [sitemap()],
   i18n: {
     defaultLocale: 'en',

@@ -1,6 +1,7 @@
 ---
 import type { Lang } from '../data/i18n';
 import SubpageHeader from './SubpageHeader.astro';
+import { siteUrl, webUrl } from '../data/urls';
 
 interface Props {
   lang: Lang;
@@ -8,6 +9,8 @@ interface Props {
 
 const { lang } = Astro.props;
 const isEs = lang === 'es';
+const requestAccessHref = isEs ? webUrl('/es/request-access') : webUrl('/request-access');
+const contactHref = isEs ? siteUrl('/es/contact') : siteUrl('/contact');
 ---
 <div class="subpage">
   <SubpageHeader lang={lang} basePath="/membership" />
@@ -37,7 +40,7 @@ const isEs = lang === 'es';
         <li>{isEs ? 'Espera revisión (normalmente en 48 horas).' : 'Wait for review (most decisions within 48 hours).'}</li>
         <li>{isEs ? 'Onboarding por WhatsApp si eres aprobado.' : 'Get onboarded over WhatsApp after approval.'}</li>
       </ol>
-      <a class="cta" href={isEs ? '/es/contact' : '/contact'}>{isEs ? 'Comenzar solicitud' : 'Start application'}</a>
+      <a class="cta" href={requestAccessHref}>{isEs ? 'Comenzar solicitud' : 'Start application'}</a>
     </section>
 
     <section>
@@ -59,8 +62,8 @@ const isEs = lang === 'es';
 
     <section>
       <h2>{isEs ? '¿Listo para aplicar?' : 'Ready to apply?'}</h2>
-      <a class="cta" href={isEs ? '/es/contact' : '/contact'}>{isEs ? 'Enviar solicitud' : 'Submit your application'}</a>
-      <p class="support">{isEs ? '¿Preguntas? Escríbenos.' : 'Questions before applying? Contact us.'} <a href={isEs ? '/es/contact' : '/contact'}>{isEs ? 'Contacto' : 'Contact'}</a></p>
+      <a class="cta" href={requestAccessHref}>{isEs ? 'Enviar solicitud' : 'Submit your application'}</a>
+      <p class="support">{isEs ? '¿Preguntas? Escríbenos.' : 'Questions before applying? Contact us.'} <a href={contactHref}>{isEs ? 'Contacto' : 'Contact'}</a></p>
     </section>
   </main>
 </div>

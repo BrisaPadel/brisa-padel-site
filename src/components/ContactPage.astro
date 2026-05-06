@@ -2,6 +2,7 @@
 import type { Lang } from '../data/i18n';
 import { translations } from '../data/i18n';
 import SubpageHeader from './SubpageHeader.astro';
+import { siteUrl } from '../data/urls';
 
 interface Props {
   lang: Lang;
@@ -9,6 +10,7 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = translations[lang];
+const returnHomeHref = lang === 'en' ? siteUrl('/home') : siteUrl('/es/home');
 ---
 <div class="subpage">
   <SubpageHeader lang={lang} basePath="/contact" />
@@ -34,7 +36,7 @@ const t = translations[lang];
     <section id="contact-success" hidden>
       <h2>{lang === 'en' ? 'Message Sent' : 'Mensaje Enviado'}</h2>
       <p>{lang === 'en' ? "Thank you for reaching out. We'll get back to you within one business day." : 'Gracias por contactarnos. Te responderemos dentro de un día hábil.'}</p>
-      <a href={lang === 'en' ? '/home' : '/es/home'}>{lang === 'en' ? 'Return Home' : 'Volver al Inicio'}</a>
+      <a href={returnHomeHref}>{lang === 'en' ? 'Return Home' : 'Volver al Inicio'}</a>
     </section>
   </main>
 </div>
