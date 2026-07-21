@@ -66,6 +66,13 @@ const returnHomeHref = lang === 'en' ? siteUrl('/home') : siteUrl('/es/home');
       }
     });
     if (!ok) return;
+    const data = new FormData(form);
+    const name = String(data.get('name') || '').trim();
+    const email = String(data.get('email') || '').trim();
+    const message = String(data.get('message') || '').trim();
+    const subject = isSpanish ? `Mensaje de ${name} — brisapadel.com` : `Message from ${name} — brisapadel.com`;
+    const body = `${message}\n\n—\n${name}\n${email}`;
+    window.location.href = `mailto:hello@brisapadel.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     form.hidden = true;
     if (success) success.hidden = false;
   });
