@@ -1,0 +1,84 @@
+name: prod-deploy
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch name to checkout"
+        required: true
+        default: "main"
+
+      print_only:
+        description: "Dry run — print the docker commands without running them"
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: SSH into EC2 and deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGE_EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.STAGE_PEM_KEY }}
+          port: 22
+
+          script: |
+            set -e
+
+            PRINT_ONLY="${{ github.event.inputs.print_only || 'false' }}"
+            BRANCH="${{ github.event.inputs.branch || 'stage' }}"
+
+            cd /opt/work
+
+            # Remove previous source
+            rm -rf brisa-padel-site
+
+            # Clone repository
+            git clone https://x-access-token:${{ secrets.STAGE_GH_TOKEN }}@github.com/BrisaPadel/brisa-padel-site.git
+
+            cd brisa-padel-site
+
+            # Checkout requested branch
+            git checkout "$BRANCH"
+            git pull origin "$BRANCH"
+
+            if [ "$PRINT_ONLY" = "true" ]; then
+              echo "PRINT ONLY — would run:"
+              echo "  sudo docker build -t brisa_web ."
+              echo "  sudo docker stop brisa_web"
+              echo "  sudo docker rm brisa_web"
+              echo "  sudo docker run -d --name brisa_web -p 7000:80 --restart unless-stopped --network brisa brisa_web"
+              exit 0
+            fi
+
+            echo "Building Docker image..."
+
+            sudo docker build -t brisa_web .
+
+            echo "Stopping existing container..."
+
+            sudo docker stop brisa_web || true
+            sudo docker rm brisa_web || true
+
+            echo "Starting new container..."
+
+            sudo docker run -d \
+              --name brisa_web \
+              -p 7000:80 \
+              --restart unless-stopped \
+              --network brisa \
+              brisa_web
+
+            echo "Deployment completed."
+
+            sudo docker ps --filter "name=brisa_web"
