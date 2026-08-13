@@ -27,9 +27,9 @@ jobs:
       - name: SSH into EC2 and deploy
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.STAGE_EC2_HOST }}
+          host: ${{ vars.STAGE_EC2_HOST }}
           username: ubuntu
-          key: ${{ secrets.STAGE_PEM_KEY }}
+          key: ${{ vars.STAGE_PEM_KEY }}
           port: 22
 
           script: |
@@ -44,7 +44,7 @@ jobs:
             rm -rf brisa-padel-site
 
             # Clone repository
-            git clone https://x-access-token:${{ secrets.STAGE_GH_TOKEN }}@github.com/BrisaPadel/brisa-padel-site.git
+            git clone https://x-access-token:${{ vars.STAGE_GH_TOKEN }}@github.com/BrisaPadel/brisa-padel-site.git
 
             cd brisa-padel-site
 
