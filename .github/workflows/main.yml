@@ -36,7 +36,7 @@ jobs:
             set -e
 
             PRINT_ONLY="${{ github.event.inputs.print_only || 'false' }}"
-            BRANCH="${{ github.event.inputs.branch || 'stage' }}"
+            BRANCH="${{ github.event.inputs.branch || 'main' }}"
 
             cd /opt/work
 
