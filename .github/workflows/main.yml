@@ -54,16 +54,16 @@ jobs:
 
             if [ "$PRINT_ONLY" = "true" ]; then
               echo "PRINT ONLY — would run:"
-              echo "  sudo docker build -t brisa_web ."
-              echo "  sudo docker stop brisa_web"
-              echo "  sudo docker rm brisa_web"
-              echo "  sudo docker run -d --name brisa_web -p 7000:80 --restart unless-stopped --network brisa brisa-padel-site"
+              echo "  sudo docker build -t brisa-padel-site ."
+              echo "  sudo docker stop brisa-padel-site"
+              echo "  sudo docker rm brisa-padel-site"
+              echo "  sudo docker run -d --name brisa-padel-site -p 7000:80 --restart unless-stopped --network brisa brisa-padel-site"
               exit 0
             fi
 
             echo "Building Docker image..."
 
-            sudo docker build -t brisa_web .
+            sudo docker build -t brisa-padel-site .
 
             echo "Stopping existing container..."
 
