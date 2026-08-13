@@ -57,7 +57,7 @@ jobs:
               echo "  sudo docker build -t brisa_web ."
               echo "  sudo docker stop brisa_web"
               echo "  sudo docker rm brisa_web"
-              echo "  sudo docker run -d --name brisa_web -p 7000:80 --restart unless-stopped --network brisa brisa_web"
+              echo "  sudo docker run -d --name brisa_web -p 7000:80 --restart unless-stopped --network brisa brisa-padel-site"
               exit 0
             fi
 
@@ -67,18 +67,18 @@ jobs:
 
             echo "Stopping existing container..."
 
-            sudo docker stop brisa_web || true
-            sudo docker rm brisa_web || true
+            sudo docker stop brisa-padel-site || true
+            sudo docker rm brisa-padel-site || true
 
             echo "Starting new container..."
 
             sudo docker run -d \
-              --name brisa_web \
+              --name brisa-padel-site \
               -p 7000:80 \
               --restart unless-stopped \
               --network brisa \
-              brisa_web
+              brisa-padel-site
 
             echo "Deployment completed."
 
-            sudo docker ps --filter "name=brisa_web"
+            sudo docker ps --filter "name=brisa-padel-site"
