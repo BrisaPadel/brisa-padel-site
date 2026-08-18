@@ -9,11 +9,8 @@ FROM node:22-alpine AS build
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-# Baked into the client bundle at build time; override per environment.
-ARG NEXT_PUBLIC_SITE_URL
-ARG NEXT_PUBLIC_WEB_BASE_URL
-ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
-ENV NEXT_PUBLIC_WEB_BASE_URL=$NEXT_PUBLIC_WEB_BASE_URL
+# No NEXT_PUBLIC_* build args are needed: the browser calls /api/clubs on its
+# own origin, so no API host is compiled into the client bundle.
 RUN npm run build
 
 FROM node:22-alpine AS runtime
