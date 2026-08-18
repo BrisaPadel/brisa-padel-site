@@ -18,6 +18,9 @@ export default function SiteHtml({ lang, children }: Props) {
       <body>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        {/* Loaded in the shared root layout, so it applies to every page.
+            The rule below targets the pages router's _document.js. */}
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,700;1,400;1,700&family=Source+Sans+3:wght@400;500;600;700&display=swap"
           rel="stylesheet"

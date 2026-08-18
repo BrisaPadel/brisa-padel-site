@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { STATIC_BASE_PATHS, enUrl, esUrl, type BasePath } from '@/lib/seo';
+import { listClubSlugs } from '@/lib/clubs';
 
 /**
  * Canonical URLs only.
@@ -7,9 +8,6 @@ import { STATIC_BASE_PATHS, enUrl, esUrl, type BasePath } from '@/lib/seo';
  * / and /es and now canonicalise to them, so listing them would advertise
  * duplicate content. URLs match the canonical tags exactly (no trailing slash),
  * which the Astro sitemap did not do.
- *
- * Slug-based sections plug in here: make this async and concat the paths, e.g.
- *   const clubPaths = (await listClubSlugs()).map((slug) => `/clubs/${slug}`);
  */
 function entriesFor(basePath: BasePath): MetadataRoute.Sitemap {
   const languages = { en: enUrl(basePath), es: esUrl(basePath) };
@@ -19,6 +17,16 @@ function entriesFor(basePath: BasePath): MetadataRoute.Sitemap {
   ];
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  return STATIC_BASE_PATHS.flatMap(entriesFor);
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const marketing = STATIC_BASE_PATHS.flatMap(entriesFor);
+
+  // The club directory is English-only, so these are listed without hreflang
+  // alternates rather than advertising Spanish URLs that do not exist.
+  const slugs = await listClubSlugs();
+  const directory: MetadataRoute.Sitemap = [
+    { url: enUrl('/clubs') },
+    ...slugs.map((slug) => ({ url: enUrl(`/clubs/${slug}`) }))
+  ];
+
+  return [...marketing, ...directory];
 }
