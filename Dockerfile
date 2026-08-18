@@ -27,5 +27,5 @@ COPY --from=build --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=build --chown=nextjs:nodejs /app/public ./public
 
 USER nextjs
-EXPOSE 3000
+EXPOSE 80
 CMD ["node", "server.js"]
