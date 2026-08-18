@@ -8,6 +8,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   ArrowUpRight, CheckCircle2, Info, LoaderCircle, Search, SlidersHorizontal, Star
@@ -81,18 +82,35 @@ function ClubCard({ club }: { club: Club }) {
 
 type Setting = 'All' | 'Indoor' | 'Outdoor';
 
+/** Build the query string for a given filter state. Empty filters produce '',
+ *  so the unfiltered directory keeps the clean /clubs URL. */
+function toQueryString(query: string, setting: Setting) {
+  const params = new URLSearchParams();
+  if (query.trim()) params.set('q', query.trim());
+  if (setting !== 'All') params.set('setting', setting);
+  const search = params.toString();
+  return search ? `?${search}` : '';
+}
+
 export default function ClubsDirectory({
   initialClubs,
-  initialTotal
+  initialTotal,
+  initialQuery = '',
+  initialSetting = 'All'
 }: {
   initialClubs: Club[];
   initialTotal: number;
+  initialQuery?: string;
+  initialSetting?: Setting;
 }) {
+  const router = useRouter();
+  const pathname = usePathname();
+
   // What the user has typed, and the value the API is actually queried with.
   // Separating them is what makes the debounce work without racing the filters.
-  const [query, setQuery] = useState('');
-  const [appliedQuery, setAppliedQuery] = useState('');
-  const [settingFilter, setSettingFilter] = useState<Setting>('All');
+  const [query, setQuery] = useState(initialQuery);
+  const [appliedQuery, setAppliedQuery] = useState(initialQuery);
+  const [settingFilter, setSettingFilter] = useState<Setting>(initialSetting);
 
   const [clubs, setClubs] = useState<Club[]>(initialClubs);
   const [total, setTotal] = useState(initialTotal);
@@ -105,8 +123,8 @@ export default function ClubsDirectory({
 
   const isTypingPending = query !== appliedQuery;
 
-  // The server already rendered page 1 unfiltered; refetching it on mount would
-  // throw that away and flash the list.
+  // The server already rendered page 1 for these exact filters; refetching on
+  // mount would throw that away and flash the list.
   const isFirstRun = useRef(true);
   // Only the newest response may write to state, so a slow early request cannot
   // overwrite the result of a later keystroke or filter click.
@@ -140,13 +158,17 @@ export default function ClubsDirectory({
     return () => clearTimeout(timer);
   }, [query, appliedQuery]);
 
-  // One place fetches: whenever the applied query or the filter changes.
-  // Filter clicks are not debounced, so they feel immediate.
+  // One place fetches, and the same place writes the filters into the URL, so
+  // the address bar always describes what is on screen. Reloading, sharing or
+  // coming back to that URL re-runs the identical query on the server.
+  // replace() rather than push() keeps one history entry per visit instead of
+  // one per keystroke.
   useEffect(() => {
     if (isFirstRun.current) {
       isFirstRun.current = false;
       return;
     }
+    router.replace(`${pathname}${toQueryString(appliedQuery, settingFilter)}`, { scroll: false });
     void load(1, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appliedQuery, settingFilter]);

@@ -75,8 +75,13 @@ async function getJson<T>(path: string): Promise<T | null> {
   }
 }
 
-export async function listClubs(limit = 24): Promise<{ clubs: Club[]; total: number }> {
-  const data = await getJson<{ clubs: Club[]; total: number }>(`/api/clubs?limit=${limit}`);
+export async function listClubs(
+  filters: { q?: string; setting?: string; limit?: number } = {}
+): Promise<{ clubs: Club[]; total: number }> {
+  const search = new URLSearchParams({ limit: String(filters.limit ?? 24) });
+  if (filters.q?.trim()) search.set('q', filters.q.trim());
+  if (filters.setting) search.set('setting', filters.setting);
+  const data = await getJson<{ clubs: Club[]; total: number }>(`/api/clubs?${search.toString()}`);
   return { clubs: data?.clubs ?? [], total: data?.total ?? 0 };
 }
 
