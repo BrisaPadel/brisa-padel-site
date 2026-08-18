@@ -1,0 +1,13 @@
+/* Ported verbatim from MembershipPage.astro. */
+.subpage.s { min-height: 100vh; background: #faf8f5; }
+main.s { max-width: 760px; margin: 0 auto; padding: 3.5rem 1.5rem; }
+.label.s { margin: 0 0 .75rem; font-size: .72rem; text-transform: uppercase; letter-spacing: .16em; color: #8b8178; font-weight: 700; }
+h1.s { font-family:"Cormorant Garamond", serif; font-size: clamp(2rem, 5vw, 3.3rem); margin: 0 0 .8rem; color:#1c1917; }
+.intro.s { color:#57534e; line-height:1.7; margin: 0 0 1.5rem; }
+section.s { margin-top: 1.6rem; }
+h2.s { font-family:"Cormorant Garamond", serif; border-left:2px solid var(--brand-orange); padding-left:.8rem; color:#1c1917; margin:0 0 .7rem; font-size:1.42rem; }
+p.s { margin: 0; color:#57534e; line-height:1.65; }
+ul.s, ol.s { margin: .7rem 0 0; padding-left: 1.2rem; color:#57534e; line-height:1.65; }
+.cta.s { display:inline-block; margin-top: .9rem; background:var(--brand-orange); color:#fff; padding:.7rem 1.3rem; text-decoration:none; text-transform:uppercase; font-size:.75rem; letter-spacing:.14em; font-weight:700; }
+.support.s { margin-top: .6rem; }
+.support.s a.s { color: var(--brand-orange-dark); }

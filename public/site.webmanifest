@@ -1,6 +1,6 @@
 {
-  "name": "MyWebSite",
-  "short_name": "MySite",
+  "name": "Brisa Padel",
+  "short_name": "Brisa Padel",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -15,7 +15,8 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "display": "standalone"
+  "theme_color": "#f26419",
+  "background_color": "#111111",
+  "display": "standalone",
+  "start_url": "/"
 }

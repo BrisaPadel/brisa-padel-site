@@ -1,0 +1,10 @@
+/* Ported verbatim from SubpageHeader.astro; `.s` mirrors data-astro-cid-ndigm7qb. */
+.sub-head.s { position: sticky; top: 0; z-index: 20; height: 68px; display:flex; align-items:center; justify-content:space-between; padding: 0 1.2rem; background:#fff; border-bottom:1px solid #eee6dd; }
+.back.s { color:#78716c; text-decoration:none; font-size:.82rem; letter-spacing:.03em; font-weight:600; }
+.back.s:hover { color: var(--brand-orange); }
+.brand.s { display:flex; align-items:center; gap:.5rem; font-family:"Cormorant Garamond", serif; text-transform:uppercase; letter-spacing:.14em; font-weight:700; color:#1c1917; }
+.brand.s span.s, .brand.s em.s { color: var(--brand-orange); font-style: normal; }
+.lang.s { display:flex; border:1px solid #e7e2dc; }
+.lang.s a.s { text-decoration:none; font-size:.7rem; font-weight:800; letter-spacing:.14em; color:#78716c; padding:.45rem .7rem; }
+.lang.s a.s.active { background: var(--brand-orange); color:#fff; }
+@media (max-width:600px){ .brand.s strong.s{font-size:.9rem;} }
