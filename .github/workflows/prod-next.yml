@@ -39,8 +39,8 @@ jobs:
             cd /opt/work
             # Remove previous source
             rm -rf brisa-padel-site-v1
-            # Clone repository
-            git clone https://x-access-token:${{ vars.STAGE_GH_TOKEN }}@github.com/BrisaPadel/brisa-padel-site.git
+            git clone  --branch "$BRANCH"  https://x-access-token:${{ vars.STAGE_GH_TOKEN }}@github.com/BrisaPadel/brisa-padel-site.git brisa-padel-site-v1
+        
             cd brisa-padel-site-v1
             # Checkout requested branch
             git checkout "$BRANCH"
