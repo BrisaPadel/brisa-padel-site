@@ -1,0 +1,69 @@
+name: prod-deploy
+
+on:
+  push:
+    branches:
+      - next-js-setup
+
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch name to checkout"
+        required: true
+        default: "next-js-setup"
+
+      print_only:
+        description: "Dry run — print the docker commands without running them"
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: SSH into EC2 and deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ vars.STAGE_EC2_HOST }}
+          username: ubuntu
+          key: ${{ vars.STAGE_PEM_KEY }}
+          port: 22
+
+          script: |
+            set -e
+            PRINT_ONLY="${{ github.event.inputs.print_only || 'false' }}"
+            BRANCH="${{ github.event.inputs.branch || 'next-js-setup' }}"
+            cd /opt/work
+            # Remove previous source
+            rm -rf brisa-padel-site-v1
+            # Clone repository
+            git clone https://x-access-token:${{ vars.STAGE_GH_TOKEN }}@github.com/BrisaPadel/brisa-padel-site.git
+            cd brisa-padel-site-v1
+            # Checkout requested branch
+            git checkout "$BRANCH"
+            git pull origin "$BRANCH"
+            if [ "$PRINT_ONLY" = "true" ]; then
+              echo "PRINT ONLY — would run:"
+              echo "  sudo docker build -t brisa-padel-site-v1 ."
+              echo "  sudo docker stop brisa-padel-site-v1"
+              echo "  sudo docker rm brisa-padel-site-v1"
+              echo "  sudo docker run -d --name brisa-padel-site-v1 -p 7000:80 --restart unless-stopped --network brisa brisa-padel-site-v1"
+              exit 0
+            fi
+            echo "Building Docker image..."
+            sudo docker build -t brisa-padel-site-v1 .
+            echo "Stopping existing container..."
+            sudo docker stop brisa-padel-site-v1 || true
+            sudo docker rm brisa-padel-site-v1 || true
+            echo "Starting new container..."
+            sudo docker run -d \
+              --name brisa-padel-site-v1 \
+              -p 7001:80 \
+              --restart unless-stopped \
+              --network brisa \
+              brisa-padel-site-v1
+            echo "Deployment completed."
+            sudo docker ps --filter "name=brisa-padel-site-v1"
