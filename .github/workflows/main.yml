@@ -3,14 +3,14 @@ name: prod-deploy
 on:
   push:
     branches:
-      - main
+      - next-js-setup
 
   workflow_dispatch:
     inputs:
       branch:
         description: "Branch name to checkout"
         required: true
-        default: "main"
+        default: "next-js-setup"
 
       print_only:
         description: "Dry run — print the docker commands without running them"
@@ -36,7 +36,7 @@ jobs:
             set -e
 
             PRINT_ONLY="${{ github.event.inputs.print_only || 'false' }}"
-            BRANCH="${{ github.event.inputs.branch || 'main' }}"
+            BRANCH="${{ github.event.inputs.branch || 'next-js-setup' }}"
 
             cd /opt/work
 
