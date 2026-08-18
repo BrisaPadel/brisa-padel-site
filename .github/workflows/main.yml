@@ -27,9 +27,9 @@ jobs:
       - name: SSH into EC2 and deploy
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ vars.STAGE_EC2_HOST }}
+          host: ${{ vars.STAGE_EC2_HOST_V1 }}
           username: ubuntu
-          key: ${{ vars.STAGE_PEM_KEY }}
+          key: ${{ vars.STAGE_PEM_KEY_V1 }}
           port: 22
 
           script: |
