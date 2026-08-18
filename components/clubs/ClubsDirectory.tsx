@@ -13,6 +13,7 @@ import Link from 'next/link';
 import {
   ArrowUpRight, CheckCircle2, Info, LoaderCircle, Search, SlidersHorizontal, Star
 } from 'lucide-react';
+import { CLUBS_RETURN_KEY } from './BackToClubsLink';
 import ClubCardSkeleton from './ClubCardSkeleton';
 import Navbar from './Navbar';
 import Footer from './Footer';
@@ -129,6 +130,17 @@ export default function ClubsDirectory({
   // Only the newest response may write to state, so a slow early request cannot
   // overwrite the result of a later keystroke or filter click.
   const requestId = useRef(0);
+
+  // Remember the filters so a club profile's "back" link can return here with
+  // them intact. Written on mount too, so arriving via a filtered URL and
+  // clicking straight into a club still comes back filtered.
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(CLUBS_RETURN_KEY, toQueryString(appliedQuery, settingFilter));
+    } catch {
+      // sessionStorage can throw in private mode; the plain /clubs link remains.
+    }
+  }, [appliedQuery, settingFilter]);
 
   const load = useCallback(
     async (nextPage: number, append: boolean) => {
