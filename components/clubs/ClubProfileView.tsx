@@ -10,6 +10,7 @@
  */
 
 import BackToClubsLink from './BackToClubsLink';
+import ClubReviewsSection from './ClubReviewsSection';
 import {
   ArrowLeft, ArrowUpRight, CalendarDays, Clock3, DollarSign, Droplets,
   ExternalLink, Info, MapPin, MessageCircle, Phone, Ruler, Snowflake,
@@ -17,7 +18,7 @@ import {
 } from 'lucide-react';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import { UNVERIFIED, type Club } from '@/lib/clubs';
+import { UNVERIFIED, type Club, type ClubReview } from '@/lib/clubs';
 
 function DataValue({ value }: { value: string }) {
   return value === UNVERIFIED
@@ -33,10 +34,16 @@ function DetailRow({ icon, label, value }: { icon: React.ReactNode; label: strin
   return <div className="flex gap-3 border-t border-stone-100 py-3.5 first:border-t-0 first:pt-0"><span className="mt-0.5 shrink-0 text-[#F26419]">{icon}</span><div className="min-w-0"><p className="text-xs font-semibold text-stone-500">{label}</p><p className="mt-0.5 text-sm leading-snug"><DataValue value={value} /></p></div></div>;
 }
 
-export default function ClubProfileView({ club }: { club: Club }) {
+export default function ClubProfileView({
+  club,
+  reviews
+}: {
+  club: Club;
+  reviews: ClubReview[];
+}) {
   const directions = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(club.address)}`;
   const directBookingHref = club.website || directions;
-  const rating: number | null = null;
+  const rating = club.averageRating;
 
   return (
     <div className="min-h-screen bg-[#f9f7f4] text-stone-900">
@@ -47,7 +54,7 @@ export default function ClubProfileView({ club }: { club: Club }) {
             <BackToClubsLink className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.13em] text-stone-500 transition-colors hover:text-[#F26419]"><ArrowLeft size={14} /> All club profiles</BackToClubsLink>
             <div className="mt-8 grid gap-8 lg:grid-cols-[1.35fr_0.65fr] lg:items-end">
               <div><p className="text-[0.66rem] font-bold uppercase tracking-[0.18em] text-[#F26419]">{club.neighborhood} · Brisa Club Intelligence</p><h1 style={{ fontFamily: "'Cormorant Garamond', serif" }} className="mt-3 max-w-4xl text-5xl font-bold leading-[0.92] text-stone-900 sm:text-6xl">{club.name}</h1><p className="mt-5 max-w-3xl text-base leading-relaxed text-stone-600">{club.description}</p></div>
-              <div className="border-2 border-[#F26419] bg-[#fffaf6] p-5"><p className="text-[0.64rem] font-bold uppercase tracking-[0.15em] text-[#c44b0c]">Blended player rating</p><div className="mt-2 flex items-center gap-3"><RatingStars rating={rating ?? 0} /><span className="text-lg font-semibold text-stone-900">{rating ? `${rating}/5` : '— / 5'}</span></div><p className="mt-4 text-xs leading-relaxed text-stone-500">Player reports open soon.</p></div>
+              <div className="border-2 border-[#F26419] bg-[#fffaf6] p-5"><p className="text-[0.64rem] font-bold uppercase tracking-[0.15em] text-[#c44b0c]">Blended player rating</p><div className="mt-2 flex items-center gap-3"><RatingStars rating={rating ?? 0} /><span className="text-lg font-semibold text-stone-900">{rating ? `${rating.toFixed(1)}/5` : '— / 5'}</span></div><p className="mt-4 text-xs leading-relaxed text-stone-500">{club.reviewCount > 0 ? `From ${club.reviewCount} approved player ${club.reviewCount === 1 ? 'report' : 'reports'}.` : 'No player reports yet.'}</p></div>
             </div>
           </div>
         </section>
@@ -63,7 +70,7 @@ export default function ClubProfileView({ club }: { club: Club }) {
                 <section className="border border-stone-200 bg-white p-6"><p className="text-[0.65rem] font-bold uppercase tracking-[0.17em] text-[#F26419]">Coaching</p><h2 style={{ fontFamily: "'Cormorant Garamond', serif" }} className="mt-2 text-4xl font-bold text-stone-900">Coaches on site</h2><ul className="mt-5 flex flex-wrap gap-2">{club.coaches.map((coach) => <li key={coach} className="border border-stone-200 bg-stone-50 px-3 py-2 text-sm text-stone-700">{coach}</li>)}</ul></section>
               )}
 
-              <section><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="text-[0.65rem] font-bold uppercase tracking-[0.17em] text-[#F26419]">Player reports</p><h2 style={{ fontFamily: "'Cormorant Garamond', serif" }} className="mt-2 text-4xl font-bold text-stone-900">Reviews by last date played</h2><p className="mt-2 text-sm text-stone-500">Approved player reports appear newest first.</p></div></div><div className="mt-6 border border-dashed border-stone-300 bg-white px-6 py-12 text-center"><Star size={23} className="mx-auto text-[#F26419]" /><p className="mt-3 font-semibold text-stone-800">No player reviews yet.</p><p className="mx-auto mt-1 max-w-md text-sm leading-relaxed text-stone-500">Player reports open soon. Nothing here is generated or estimated.</p></div></section>
+              <ClubReviewsSection slug={club.slug} clubName={club.name} reviews={reviews} />
             </div>
 
             <aside className="space-y-5 lg:sticky lg:top-24 lg:h-fit">

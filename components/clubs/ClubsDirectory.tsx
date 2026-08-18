@@ -63,7 +63,24 @@ function ClubCard({ club }: { club: Club }) {
           </div>
           <div>
             <Label>Player rating</Label>
-            <p className="mt-1 text-sm text-stone-400">No reviews yet</p>
+            {club.averageRating !== null ? (
+              <div className="mt-1 flex items-center gap-1.5">
+                <span className="flex items-center gap-0.5">
+                  {Array.from({ length: 5 }, (_, index) => (
+                    <Star
+                      key={index}
+                      size={13}
+                      className={index < Math.round(club.averageRating ?? 0) ? 'fill-[#F26419] text-[#F26419]' : 'text-stone-300'}
+                    />
+                  ))}
+                </span>
+                <span className="text-xs font-semibold text-stone-700">
+                  {club.averageRating.toFixed(1)}
+                </span>
+              </div>
+            ) : (
+              <p className="mt-1 text-sm text-stone-400">No reviews yet</p>
+            )}
           </div>
           <div className="col-span-2">
             <Label>Hours</Label>

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import ClubProfileView from '@/components/clubs/ClubProfileView';
-import { getClub, UNVERIFIED, type Club } from '@/lib/clubs';
+import { getClub, listClubReviews, UNVERIFIED, type Club } from '@/lib/clubs';
 import { SOCIAL_IMAGE, buildMetadata, canonicalUrl } from '@/lib/seo';
 
 type PageProps = { params: Promise<{ slug: string }> };
@@ -68,12 +68,14 @@ export default async function Page({ params }: PageProps) {
   const club = await getClub(slug);
   if (!club) notFound();
 
+  const reviews = await listClubReviews(slug);
+
   const { description } = seoFor(club);
   const known = (value: string) => (value && value !== UNVERIFIED ? value : undefined);
 
   // SportsActivityLocation, server-rendered so crawlers get it in the HTML.
-  // No aggregateRating is emitted: there are no reviews, and inventing one
-  // would be structured-data spam.
+  // aggregateRating appears only once real approved reviews exist — publishing
+  // a rating with nothing behind it is structured-data spam.
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SportsActivityLocation',
@@ -92,7 +94,17 @@ export default async function Page({ params }: PageProps) {
     sameAs: club.website ? [club.website] : undefined,
     geo: club.latitude && club.longitude
       ? { '@type': 'GeoCoordinates', latitude: club.latitude, longitude: club.longitude }
-      : undefined
+      : undefined,
+    aggregateRating:
+      club.reviewCount > 0 && club.averageRating !== null
+        ? {
+            '@type': 'AggregateRating',
+            ratingValue: club.averageRating,
+            reviewCount: club.reviewCount,
+            bestRating: 5,
+            worstRating: 1
+          }
+        : undefined
   };
 
   return (
@@ -101,7 +113,7 @@ export default async function Page({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <ClubProfileView club={club} />
+      <ClubProfileView club={club} reviews={reviews} />
     </>
   );
 }

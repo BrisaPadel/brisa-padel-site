@@ -18,6 +18,16 @@ export type ClubMetaTags = {
 
 export type ClubSource = { label: string; href: string };
 
+export type ClubReview = {
+  id: string;
+  reviewerName: string;
+  datePlayed: string;
+  matchType: string;
+  experience: string;
+  rating: number;
+  images: Array<{ id: string; imageUrl: string }>;
+};
+
 export type Club = {
   id: string;
   slug: string;
@@ -47,6 +57,9 @@ export type Club = {
   heroImageUrl: string;
   sources: ClubSource[];
   metaTags: ClubMetaTags;
+  /** Approved reviews only; averageRating is null when a club has none. */
+  reviewCount: number;
+  averageRating: number | null;
   latitude: string | null;
   longitude: string | null;
   city: string;
@@ -83,6 +96,13 @@ export async function listClubs(
   if (filters.setting) search.set('setting', filters.setting);
   const data = await getJson<{ clubs: Club[]; total: number }>(`/api/clubs?${search.toString()}`);
   return { clubs: data?.clubs ?? [], total: data?.total ?? 0 };
+}
+
+export async function listClubReviews(slug: string): Promise<ClubReview[]> {
+  const data = await getJson<{ reviews: ClubReview[] }>(
+    `/api/clubs/${encodeURIComponent(slug)}/reviews`
+  );
+  return data?.reviews ?? [];
 }
 
 /** Every published slug — used by the sitemap, which needs all of them. */
