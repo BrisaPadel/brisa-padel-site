@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 /** Where the API lives when the portal is reached directly, bypassing nginx. */
-const API_ORIGIN = process.env.CLUBS_API_BASE_URL ?? "http://localhost:8000";
+const API_ORIGIN =
+  process.env.CLUBS_API_BASE_URL ??
+  (process.env.NODE_ENV === "production"
+    ? "http://brisa_server:8000"
+    : "http://localhost:8000");
 
 const nextConfig: NextConfig = {
   output: "standalone",

@@ -77,7 +77,15 @@ export type Club = {
 
 export const UNVERIFIED = 'Not verified by club';
 
-const API_BASE_URL = process.env.CLUBS_API_BASE_URL ?? 'http://localhost:8000';
+// Server Components run inside the `brisa-padel-site` container in production,
+// where localhost points back to that container rather than to the API. Both
+// production containers share the `brisa` Docker network, so use Docker DNS as
+// the safe production default while retaining localhost for local development.
+const API_BASE_URL =
+  process.env.CLUBS_API_BASE_URL ??
+  (process.env.NODE_ENV === 'production'
+    ? 'http://brisa_server:8000'
+    : 'http://localhost:8000');
 
 async function getJson<T>(path: string): Promise<T | null> {
   try {
