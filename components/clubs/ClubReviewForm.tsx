@@ -1,7 +1,7 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { ImagePlus, LoaderCircle, Star, Trash2, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { ImagePlus, LoaderCircle, RefreshCw, Star, Trash2, X } from 'lucide-react';
 import {
   EXPERIENCE_MAX,
   EXPERIENCE_MIN,
@@ -11,8 +11,208 @@ import {
   submitClubReview,
   type MatchType
 } from '@/lib/club-reviews';
+import ThemedDatePicker from '@/components/ui/ThemedDatePicker';
+import ThemedSelect from '@/components/ui/ThemedSelect';
+import {
+  clearSession,
+  requestCaptcha,
+  requestOtp,
+  storedEmail,
+  storedToken,
+  verifyOtp,
+  type Captcha
+} from '@/lib/site-auth';
 
 type PhotoDraft = { id: string; file: File; previewUrl: string };
+
+const fieldClass =
+  'mt-2 w-full border border-stone-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-[#F26419] focus:ring-2 focus:ring-[#F26419]/15';
+const labelClass =
+  'text-[0.65rem] font-bold uppercase tracking-[0.13em] text-stone-500';
+
+/**
+ * Sign-in gate shown in place of the review form.
+ *
+ * Reviews carry weight on a directory that promises real player reports, so a
+ * reviewer has to be a Brisa member. This runs the server's existing three-step
+ * flow — captcha, emailed code, verify — rather than inventing a second one.
+ */
+function SignInPanel({
+  clubName,
+  onClose,
+  onSignedIn
+}: {
+  clubName: string;
+  onClose: () => void;
+  onSignedIn: (token: string) => void;
+}) {
+  const [email, setEmail] = useState('');
+  const [captcha, setCaptcha] = useState<Captcha | null>(null);
+  const [captchaAnswer, setCaptchaAnswer] = useState('');
+  const [otp, setOtp] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+
+  const loadCaptcha = async () => {
+    setCaptchaAnswer('');
+    const result = await requestCaptcha();
+    if (result.ok) setCaptcha(result.data);
+    else setError(result.message);
+  };
+
+  // The captcha is single-use, so it is fetched when the panel opens and again
+  // whenever the member asks for a fresh sum.
+  useEffect(() => {
+    void loadCaptcha();
+    setEmail(storedEmail());
+  }, []);
+
+  const handleSendCode = async () => {
+    setError('');
+    if (!email.trim()) return setError('Enter the email on your Brisa account.');
+    if (!captcha) return setError('The captcha is still loading. Try again in a moment.');
+    if (!captchaAnswer.trim()) return setError('Answer the captcha first.');
+
+    setBusy(true);
+    const result = await requestOtp(email, captcha.captchaId, captchaAnswer);
+    setBusy(false);
+
+    if (!result.ok) {
+      // A rejected attempt burns the sum, so replace it before the retry.
+      void loadCaptcha();
+      return setError(result.message);
+    }
+    setOtpSent(true);
+  };
+
+  const handleVerify = async () => {
+    setError('');
+    if (otp.trim().length !== 6) return setError('Enter the six-digit code from your email.');
+
+    setBusy(true);
+    const result = await verifyOtp(email, otp);
+    setBusy(false);
+
+    if (!result.ok) return setError(result.message);
+    onSignedIn(result.data);
+  };
+
+  return (
+    <div className="max-h-[94vh] w-full max-w-md overflow-y-auto bg-[#fffdfb] p-6 shadow-2xl sm:p-8">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[#F26419]">
+            Members only
+          </p>
+          <h2
+            id="club-review-title"
+            style={{ fontFamily: "'Cormorant Garamond', serif" }}
+            className="mt-1 text-3xl font-bold text-stone-900"
+          >
+            Sign in to review
+          </h2>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="p-2 text-stone-500 hover:text-stone-900"
+          aria-label="Close sign in"
+        >
+          <X size={20} />
+        </button>
+      </div>
+
+      <p className="mt-4 text-sm leading-relaxed text-stone-500">
+        Reviews of {clubName} come from Brisa members, so players can trust what they read.
+        Sign in with your account email — we will send you a six-digit code.
+      </p>
+
+      {!otpSent ? (
+        <>
+          <label className="mt-6 block">
+            <span className={labelClass}>Account email</span>
+            <input
+              type="email"
+              value={email}
+              autoComplete="email"
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="you@example.com"
+              className={fieldClass}
+            />
+          </label>
+
+          <div className="mt-4">
+            <span className={labelClass}>Captcha</span>
+            <div className="mt-2 flex items-center gap-3">
+              <span className="border border-stone-200 bg-stone-50 px-3 py-2.5 text-sm font-semibold tabular-nums text-stone-700">
+                {captcha ? captcha.question : 'Loading…'}
+              </span>
+              <input
+                type="number"
+                value={captchaAnswer}
+                onChange={(event) => setCaptchaAnswer(event.target.value)}
+                placeholder="Answer"
+                className="w-28 border border-stone-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-[#F26419] focus:ring-2 focus:ring-[#F26419]/15"
+              />
+              <button
+                type="button"
+                onClick={() => void loadCaptcha()}
+                className="inline-flex items-center gap-1.5 p-2 text-xs font-semibold text-[#c44b0c] hover:text-[#F26419]"
+                aria-label="Load a new captcha"
+              >
+                <RefreshCw size={14} /> New
+              </button>
+            </div>
+          </div>
+        </>
+      ) : (
+        <label className="mt-6 block">
+          <span className={labelClass}>Six-digit code</span>
+          <input
+            inputMode="numeric"
+            value={otp}
+            maxLength={6}
+            autoComplete="one-time-code"
+            onChange={(event) => setOtp(event.target.value.replace(/\D/g, ''))}
+            placeholder="123456"
+            className={`${fieldClass} tracking-[0.4em]`}
+          />
+          <span className="mt-2 block text-xs text-stone-400">Sent to {email}</span>
+        </label>
+      )}
+
+      {error && (
+        <p
+          role="alert"
+          className="mt-5 border-l-2 border-red-500 bg-red-50 px-3 py-2.5 text-sm text-red-700"
+        >
+          {error}
+        </p>
+      )}
+
+      <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+        <button
+          type="button"
+          disabled={busy}
+          onClick={onClose}
+          className="border border-stone-300 px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-stone-600 hover:border-stone-900 hover:text-stone-900 disabled:opacity-50"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => void (otpSent ? handleVerify() : handleSendCode())}
+          className="inline-flex items-center justify-center gap-2 bg-[#F26419] px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white hover:bg-[#d9500b] disabled:opacity-60"
+        >
+          {busy && <LoaderCircle size={14} className="animate-spin" />}
+          {otpSent ? 'Verify & continue' : 'Send code'}
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function ClubReviewForm({
   slug,
@@ -34,6 +234,15 @@ export default function ClubReviewForm({
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const photoInputRef = useRef<HTMLInputElement>(null);
+  // Read after mount, never during render: localStorage does not exist on the
+  // server, and seeding state from it would desync the first client render.
+  const [token, setToken] = useState('');
+  const [checkedSession, setCheckedSession] = useState(false);
+
+  useEffect(() => {
+    setToken(storedToken());
+    setCheckedSession(true);
+  }, []);
 
   // The server re-checks all of this; these messages exist so a mistake is
   // caught before a multi-megabyte upload is attempted.
@@ -81,17 +290,29 @@ export default function ClubReviewForm({
     }
 
     setIsSubmitting(true);
-    const result = await submitClubReview(slug, {
-      datePlayed,
-      experience: experience.trim(),
-      matchType,
-      photos: photos.map((photo) => photo.file),
-      rating,
-      reviewerName: reviewerName.trim()
-    });
+    const result = await submitClubReview(
+      slug,
+      {
+        datePlayed,
+        experience: experience.trim(),
+        matchType,
+        photos: photos.map((photo) => photo.file),
+        rating,
+        reviewerName: reviewerName.trim()
+      },
+      token
+    );
     setIsSubmitting(false);
 
-    if (!result.ok) return setError(result.message);
+    if (!result.ok) {
+      // The typed answers survive: dropping back to the gate re-renders the
+      // sign-in panel, and returning lands on the form with its state intact.
+      if (result.expired) {
+        clearSession();
+        setToken('');
+      }
+      return setError(result.message);
+    }
     photos.forEach((photo) => URL.revokeObjectURL(photo.previewUrl));
     onSubmitted();
   };
@@ -103,6 +324,15 @@ export default function ClubReviewForm({
       aria-modal="true"
       aria-labelledby="club-review-title"
     >
+      {!checkedSession ? (
+        // One frame at most, but rendering the gate first would flash a sign-in
+        // panel at a member who is already signed in.
+        <div className="w-full max-w-md bg-[#fffdfb] p-8 text-center shadow-2xl">
+          <LoaderCircle size={18} className="mx-auto animate-spin text-stone-400" />
+        </div>
+      ) : !token ? (
+        <SignInPanel clubName={clubName} onClose={onClose} onSignedIn={setToken} />
+      ) : (
       <form
         onSubmit={handleSubmit}
         className="max-h-[94vh] w-full max-w-xl overflow-y-auto bg-[#fffdfb] p-6 shadow-2xl sm:p-8"
@@ -148,36 +378,17 @@ export default function ClubReviewForm({
               className="mt-2 w-full border border-stone-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-[#F26419] focus:ring-2 focus:ring-[#F26419]/15"
             />
           </label>
-          <label>
-            <span className="text-[0.65rem] font-bold uppercase tracking-[0.13em] text-stone-500">
-              Date played
-            </span>
-            <input
-              type="date"
-              value={datePlayed}
-              max={new Date().toISOString().slice(0, 10)}
-              onChange={(event) => setDatePlayed(event.target.value)}
-              className="mt-2 w-full border border-stone-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-[#F26419] focus:ring-2 focus:ring-[#F26419]/15"
-            />
-          </label>
+          <ThemedDatePicker label="Date played" value={datePlayed} onChange={setDatePlayed} />
         </div>
 
-        <label className="mt-4 block">
-          <span className="text-[0.65rem] font-bold uppercase tracking-[0.13em] text-stone-500">
-            Match type
-          </span>
-          <select
+        <div className="mt-4">
+          <ThemedSelect
+            label="Match type"
             value={matchType}
-            onChange={(event) => setMatchType(event.target.value as MatchType)}
-            className="mt-2 w-full border border-stone-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-[#F26419] focus:ring-2 focus:ring-[#F26419]/15"
-          >
-            {MATCH_TYPES.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-        </label>
+            onChange={setMatchType}
+            options={MATCH_TYPES}
+          />
+        </div>
 
         <fieldset className="mt-6">
           <legend className="text-[0.65rem] font-bold uppercase tracking-[0.13em] text-stone-500">
@@ -305,6 +516,7 @@ export default function ClubReviewForm({
           </button>
         </div>
       </form>
+      )}
     </section>
   );
 }

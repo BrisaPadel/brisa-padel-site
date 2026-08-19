@@ -19,7 +19,10 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       { source: "/api/clubs", destination: `${API_ORIGIN}/api/clubs` },
-      { source: "/api/clubs/:path*", destination: `${API_ORIGIN}/api/clubs/:path*` }
+      { source: "/api/clubs/:path*", destination: `${API_ORIGIN}/api/clubs/:path*` },
+      // Reviewing requires a signed-in member, so the sign-in step needs the
+      // same treatment as the club calls: same-origin here, nginx in front.
+      { source: "/api/auth/:path*", destination: `${API_ORIGIN}/api/auth/:path*` }
     ];
   }
 };

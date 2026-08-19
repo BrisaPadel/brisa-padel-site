@@ -17,7 +17,11 @@ export const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 
 const API_BASE_URL = '';
 
-export type SubmitReviewResult = { ok: true } | { ok: false; message: string };
+export type SubmitReviewResult =
+  | { ok: true }
+  // `expired` lets the form send the member back to sign-in instead of showing
+  // a dead-end error, which is the one failure they can actually act on.
+  | { ok: false; message: string; expired?: boolean };
 
 /**
  * Same-origin, exactly like the directory search: nginx proxies /api to the API
@@ -32,7 +36,9 @@ export async function submitClubReview(
     experience: string;
     rating: number;
     photos: File[];
-  }
+  },
+  /** Member access token; the endpoint rejects the request without it. */
+  token: string
 ): Promise<SubmitReviewResult> {
   const form = new FormData();
   form.set('reviewerName', input.reviewerName);
@@ -45,11 +51,22 @@ export async function submitClubReview(
   try {
     const response = await fetch(`${API_BASE_URL}/api/clubs/${encodeURIComponent(slug)}/reviews`, {
       body: form,
+      // Content-Type is left unset on purpose: the browser must add the
+      // multipart boundary itself, and setting it here would break the upload.
+      headers: { Authorization: `Bearer ${token}` },
       method: 'POST'
     });
     const payload = (await response.json().catch(() => null)) as
       | { success?: boolean; message?: string }
       | null;
+
+    if (response.status === 401 || response.status === 403) {
+      return {
+        expired: true,
+        message: 'Your sign-in has expired. Please sign in again to post your review.',
+        ok: false
+      };
+    }
 
     if (!response.ok || !payload?.success) {
       return {

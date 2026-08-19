@@ -85,6 +85,11 @@ export default function ClubProfileView({
     <div className="min-h-screen bg-[#f9f7f4] text-stone-900">
       <Navbar bookingHref={directBookingHref} bookingExternal />
       <main className="pt-[72px]">
+        {club.heroImageUrl && (
+          <div className="h-64 w-full overflow-hidden bg-stone-200 sm:h-80 lg:h-96">
+            <img src={club.heroImageUrl} alt={club.name} className="h-full w-full object-cover" />
+          </div>
+        )}
         <section className="border-b border-stone-200 bg-[#fffdfb]">
           <div className="mx-auto max-w-[1280px] px-6 py-10 lg:px-10 lg:py-14">
             <BackToClubsLink className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.13em] text-stone-500 transition-colors hover:text-[#F26419]"><ArrowLeft size={14} /> All club profiles</BackToClubsLink>

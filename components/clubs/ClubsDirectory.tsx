@@ -45,6 +45,16 @@ function ClubCard({ club }: { club: Club }) {
   return (
     <article className="group relative overflow-hidden border border-stone-200 bg-white shadow-[0_10px_35px_-25px_rgba(41,37,36,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_rgba(41,37,36,0.42)]">
       <div className="h-1.5 bg-gradient-to-r from-[#F26419] via-[#f99a62] to-[#f8efe8]" />
+      {club.heroImageUrl && (
+        <div className="aspect-[16/9] w-full overflow-hidden bg-stone-100">
+          <img
+            src={club.heroImageUrl}
+            alt={club.name}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            loading="lazy"
+          />
+        </div>
+      )}
       <div className="p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
