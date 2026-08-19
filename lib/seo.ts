@@ -25,6 +25,21 @@ export const STATIC_BASE_PATHS: BasePath[] = [
 export const SOCIAL_IMAGE =
   'https://d2xsxph8kpxj0f.cloudfront.net/310519663394291819/T7p78GMGDvrFnfDAkMdFP2/hero_main_cc5d2bd5.jpg';
 
+/**
+ * Absolute form of an image URL, for the places a relative one cannot work.
+ *
+ * The API serves stored images as root-relative paths so no host is baked into
+ * the database. That is right for <img>, but og:image, twitter:image and
+ * JSON-LD are read by crawlers that have no page origin to resolve against, so
+ * those must be absolute. Anything already absolute is passed through.
+ */
+export function absoluteImageUrl(url: string): string {
+  const trimmed = url.trim();
+  if (!trimmed) return trimmed;
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `${SITE_BASE_URL}${trimmed.startsWith('/') ? '' : '/'}${trimmed}`;
+}
+
 /** Normalise a base path: no trailing slash, always a leading slash (or empty). */
 export function normalizeBasePath(basePath: BasePath): BasePath {
   if (!basePath || basePath === '/') return '';

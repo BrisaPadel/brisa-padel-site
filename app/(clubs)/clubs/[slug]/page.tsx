@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import ClubProfileView from '@/components/clubs/ClubProfileView';
 import { getClub, listClubReviews, UNVERIFIED, type Club } from '@/lib/clubs';
-import { SOCIAL_IMAGE, buildMetadata, canonicalUrl } from '@/lib/seo';
+import { SOCIAL_IMAGE, absoluteImageUrl, buildMetadata, canonicalUrl } from '@/lib/seo';
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -29,7 +29,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const { meta, title, description } = seoFor(club);
-  const image = meta.ogImage?.trim() || club.heroImageUrl || SOCIAL_IMAGE;
+  // Uploaded images arrive root-relative; crawlers need an absolute URL.
+  const image = absoluteImageUrl(meta.ogImage?.trim() || club.heroImageUrl || SOCIAL_IMAGE);
 
   const metadata = buildMetadata({
     title,
@@ -65,10 +66,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function Page({ params }: PageProps) {
   const { slug } = await params;
-  const club = await getClub(slug);
+  // Fetched together: the reviews do not depend on the club, and serialising
+  // them added a round trip to every club page.
+  const [club, reviews] = await Promise.all([getClub(slug), listClubReviews(slug)]);
   if (!club) notFound();
-
-  const reviews = await listClubReviews(slug);
 
   const { description } = seoFor(club);
   const known = (value: string) => (value && value !== UNVERIFIED ? value : undefined);

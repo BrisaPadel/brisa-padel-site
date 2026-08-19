@@ -14,11 +14,12 @@ import ClubReviewsSection from './ClubReviewsSection';
 import {
   ArrowLeft, ArrowUpRight, CalendarDays, Clock3, DollarSign, Droplets,
   ExternalLink, Info, MapPin, MessageCircle, Phone, Ruler, Snowflake,
-  Sparkles, Star, Sun, Wind
+  Sparkles, Sun, Wind
 } from 'lucide-react';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { UNVERIFIED, type Club, type ClubReview } from '@/lib/clubs';
+import { classifyClubStandard, formatCeilingHeight } from '@/lib/club-standard';
 
 function DataValue({ value }: { value: string }) {
   return value === UNVERIFIED
@@ -26,8 +27,40 @@ function DataValue({ value }: { value: string }) {
     : <span className="text-stone-700">{value}</span>;
 }
 
-function RatingStars({ rating, size = 17 }: { rating: number; size?: number }) {
-  return <div className="flex items-center gap-0.5" aria-label={`${rating.toFixed(1)} out of 5 stars`}>{Array.from({ length: 5 }, (_, i) => <Star key={i} size={size} className={i < Math.round(rating) ? 'fill-[#F26419] text-[#F26419]' : 'text-stone-300'} />)}</div>;
+/**
+ * Brisa's own editorial mark, sitting beside the club name. Kept visually quiet
+ * on purpose: it is an assessment, not a badge the club earned from players, and
+ * the right edge lines up with the Book a Court action in the navbar above.
+ */
+function ClubStandardBadge({ score, isPreview = false }: { score: number | null; isPreview?: boolean }) {
+  const standard = classifyClubStandard(score);
+  const tone = {
+    orange: 'border-[#e7ad8c] bg-[#fffaf6] text-[#99400f]',
+    charcoal: 'border-stone-300 bg-stone-50 text-stone-800',
+    stone: 'border-stone-300 bg-stone-50 text-stone-700',
+    red: 'border-red-200 bg-red-50 text-red-800',
+    pending: 'border-stone-200 bg-white text-stone-500'
+  }[standard.tone];
+  const isAssessed = standard.tone !== 'pending';
+
+  return (
+    <aside
+      className={`inline-flex shrink-0 items-center gap-2.5 border px-3 py-2 ${tone}`}
+      aria-label={isAssessed ? `Brisa Club Standard ${score} out of 10, ${standard.label}` : 'Brisa Club Standard assessment pending'}
+    >
+      {!isAssessed ? (
+        <span className="text-[0.6rem] font-bold uppercase tracking-[0.12em]">Brisa Standard · Pending</span>
+      ) : (
+        <>
+          <span style={{ fontFamily: "'Cormorant Garamond', serif" }} className="text-[1.65rem] font-bold leading-none">{score}</span>
+          <span className="-ml-1 text-[0.58rem] font-bold uppercase tracking-[0.1em] opacity-70">/ 10</span>
+          <span className="h-4 w-px bg-current opacity-20" />
+          <span className="text-[0.68rem] font-bold tracking-[0.01em]">{standard.label}</span>
+          {isPreview && <span className="border-l border-current/15 pl-2 text-[0.54rem] font-bold uppercase tracking-[0.12em] opacity-55">Preview</span>}
+        </>
+      )}
+    </aside>
+  );
 }
 
 function DetailRow({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
@@ -36,14 +69,17 @@ function DetailRow({ icon, label, value }: { icon: React.ReactNode; label: strin
 
 export default function ClubProfileView({
   club,
-  reviews
+  reviews,
+  editorialPreviewScore
 }: {
   club: Club;
   reviews: ClubReview[];
+  /** Design-preview only: overrides the club's real, admin-assigned score. */
+  editorialPreviewScore?: number;
 }) {
   const directions = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(club.address)}`;
   const directBookingHref = club.website || directions;
-  const rating = club.averageRating;
+  const clubStandardScore = editorialPreviewScore ?? club.brisaClubStandardScore;
 
   return (
     <div className="min-h-screen bg-[#f9f7f4] text-stone-900">
@@ -52,9 +88,13 @@ export default function ClubProfileView({
         <section className="border-b border-stone-200 bg-[#fffdfb]">
           <div className="mx-auto max-w-[1280px] px-6 py-10 lg:px-10 lg:py-14">
             <BackToClubsLink className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.13em] text-stone-500 transition-colors hover:text-[#F26419]"><ArrowLeft size={14} /> All club profiles</BackToClubsLink>
-            <div className="mt-8 grid gap-8 lg:grid-cols-[1.35fr_0.65fr] lg:items-end">
-              <div><p className="text-[0.66rem] font-bold uppercase tracking-[0.18em] text-[#F26419]">{club.neighborhood} · Brisa Club Intelligence</p><h1 style={{ fontFamily: "'Cormorant Garamond', serif" }} className="mt-3 max-w-4xl text-5xl font-bold leading-[0.92] text-stone-900 sm:text-6xl">{club.name}</h1><p className="mt-5 max-w-3xl text-base leading-relaxed text-stone-600">{club.description}</p></div>
-              <div className="border-2 border-[#F26419] bg-[#fffaf6] p-5"><p className="text-[0.64rem] font-bold uppercase tracking-[0.15em] text-[#c44b0c]">Blended player rating</p><div className="mt-2 flex items-center gap-3"><RatingStars rating={rating ?? 0} /><span className="text-lg font-semibold text-stone-900">{rating ? `${rating.toFixed(1)}/5` : '— / 5'}</span></div><p className="mt-4 text-xs leading-relaxed text-stone-500">{club.reviewCount > 0 ? `From ${club.reviewCount} approved player ${club.reviewCount === 1 ? 'report' : 'reports'}.` : 'No player reports yet.'}</p></div>
+            <div className="mt-8">
+              <p className="text-[0.66rem] font-bold uppercase tracking-[0.18em] text-[#F26419]">{club.neighborhood} · Brisa Club Intelligence</p>
+              <div className="mt-3 flex flex-col gap-3 sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-4">
+                <h1 style={{ fontFamily: "'Cormorant Garamond', serif" }} className="text-5xl font-bold leading-[0.92] text-stone-900 sm:text-6xl">{club.name}</h1>
+                <div className="sm:justify-self-end"><ClubStandardBadge score={clubStandardScore} isPreview={editorialPreviewScore !== undefined} /></div>
+              </div>
+              <p className="mt-5 max-w-3xl text-base leading-relaxed text-stone-600">{club.description}</p>
             </div>
           </div>
         </section>
@@ -64,7 +104,7 @@ export default function ClubProfileView({
             <div className="space-y-8">
               <section><p className="text-[0.65rem] font-bold uppercase tracking-[0.17em] text-[#F26419]">Club character</p><h2 style={{ fontFamily: "'Cormorant Garamond', serif" }} className="mt-2 text-4xl font-bold text-stone-900">The Brisa read</h2><div className="mt-5 border-l-2 border-[#F26419] bg-[#fff5ef] px-5 py-4"><p className="text-base leading-relaxed text-stone-800">{club.vibe}</p><div className="mt-5 border-t border-[#f4d9c8] pt-4"><p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-stone-500">Ownership</p><p className="mt-1.5 text-sm leading-relaxed"><DataValue value={club.ownership} /></p></div></div></section>
 
-              <section className="border border-stone-200 bg-white p-6"><div className="flex items-end justify-between gap-4"><div><p className="text-[0.65rem] font-bold uppercase tracking-[0.17em] text-[#F26419]">Facility ledger</p><h2 style={{ fontFamily: "'Cormorant Garamond', serif" }} className="mt-2 text-4xl font-bold text-stone-900">Club context</h2></div><span className="hidden text-xs text-stone-400 sm:block">Confirmed facts first</span></div><div className="mt-7 grid gap-x-8 md:grid-cols-2"><div><DetailRow icon={<Clock3 size={16} />} label="Hours" value={club.hours} /><DetailRow icon={club.setting === 'Indoor' ? <Snowflake size={16} /> : <Sun size={16} />} label="Court setting" value={`${club.setting} · ${club.courtCount}`} /><DetailRow icon={<Wind size={16} />} label="Indoor AC" value={club.climateControl} /><DetailRow icon={<Ruler size={16} />} label="Indoor ceiling height" value={club.ceilingHeight} /><DetailRow icon={<DollarSign size={16} />} label="Peak / off-peak court rate" value={`${club.peakRate} / ${club.offPeakRate}`} /></div><div><DetailRow icon={<CalendarDays size={16} />} label="Last court replacement" value={club.courtReplacement} /><DetailRow icon={<Sparkles size={16} />} label="Court quality" value={club.courtQuality} /><DetailRow icon={<Ruler size={16} />} label="Room for outside play" value={club.outsidePlayRoom} /><DetailRow icon={<Wind size={16} />} label="Court speed" value={club.courtSpeed} /><DetailRow icon={<Sparkles size={16} />} label="Facility cleanliness" value={club.facilityCleanliness} /><DetailRow icon={<Droplets size={16} />} label="Shower quality" value={club.showerQuality} /></div></div></section>
+              <section className="border border-stone-200 bg-white p-6"><div><p className="text-[0.65rem] font-bold uppercase tracking-[0.17em] text-[#F26419]">Facility ledger</p><h2 style={{ fontFamily: "'Cormorant Garamond', serif" }} className="mt-2 text-4xl font-bold text-stone-900">Club context</h2></div><div className="mt-7 grid gap-x-8 md:grid-cols-2"><div><DetailRow icon={<Clock3 size={16} />} label="Hours" value={club.hours} /><DetailRow icon={<Clock3 size={16} />} label="Peak / off-peak times" value={club.peakOffPeakTimes} /><DetailRow icon={club.setting === 'Indoor' ? <Snowflake size={16} /> : <Sun size={16} />} label="Court setting" value={`${club.setting} · ${club.courtCount}`} /><DetailRow icon={<Wind size={16} />} label="Indoor AC" value={club.climateControl} /><DetailRow icon={<Ruler size={16} />} label="Indoor ceiling height (ft / m)" value={formatCeilingHeight(club)} /><DetailRow icon={<DollarSign size={16} />} label="Peak / off-peak court rate" value={`${club.peakRate} / ${club.offPeakRate}`} /></div><div><DetailRow icon={<CalendarDays size={16} />} label="Last court replacement" value={club.courtReplacement} /><DetailRow icon={<Sparkles size={16} />} label="Court quality" value={club.courtQuality} /><DetailRow icon={<Ruler size={16} />} label="Room for outside play" value={club.outsidePlayRoom} /><DetailRow icon={<Wind size={16} />} label="Court speed" value={club.courtSpeed} /><DetailRow icon={<Sparkles size={16} />} label="Facility cleanliness" value={club.facilityCleanliness} /><DetailRow icon={<Droplets size={16} />} label="Shower quality" value={club.showerQuality} /></div></div></section>
 
               {club.coaches.length > 0 && (
                 <section className="border border-stone-200 bg-white p-6"><p className="text-[0.65rem] font-bold uppercase tracking-[0.17em] text-[#F26419]">Coaching</p><h2 style={{ fontFamily: "'Cormorant Garamond', serif" }} className="mt-2 text-4xl font-bold text-stone-900">Coaches on site</h2><ul className="mt-5 flex flex-wrap gap-2">{club.coaches.map((coach) => <li key={coach} className="border border-stone-200 bg-stone-50 px-3 py-2 text-sm text-stone-700">{coach}</li>)}</ul></section>

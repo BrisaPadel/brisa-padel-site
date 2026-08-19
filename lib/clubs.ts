@@ -1,4 +1,5 @@
 import 'server-only';
+import { cache } from 'react';
 
 /** Mirrors PublicClub in brisa-padel-server/src/modules/clubs/types. */
 export type ClubMetaTags = {
@@ -42,6 +43,11 @@ export type Club = {
   courtCount: string;
   climateControl: string;
   ceilingHeight: string;
+  /** Null when the club gave no number; `ceilingHeight` is the fallback text. */
+  ceilingHeightFeet: number | null;
+  /** Brisa's 1-10 editorial score. Null means the club is unassessed. */
+  brisaClubStandardScore: number | null;
+  peakOffPeakTimes: string;
   peakRate: string;
   offPeakRate: string;
   coaches: string[];
@@ -54,6 +60,8 @@ export type Club = {
   vibe: string;
   description: string;
   ownership: string;
+  /** Uploaded gallery in display order; the first is also `heroImageUrl`. */
+  images: string[];
   heroImageUrl: string;
   sources: ClubSource[];
   metaTags: ClubMetaTags;
@@ -111,7 +119,14 @@ export async function listClubSlugs(): Promise<string[]> {
   return data?.slugs ?? [];
 }
 
-export async function getClub(slug: string): Promise<Club | null> {
+/**
+ * Wrapped in React's `cache` so generateMetadata() and the page component share
+ * one call per request. Both need the club, and both run on every request
+ * because the route is force-dynamic with `cache: 'no-store'` — the setting
+ * that also switches off Next's own fetch memoisation, so without this the API
+ * is hit twice for every club page a crawler visits.
+ */
+export const getClub = cache(async (slug: string): Promise<Club | null> => {
   const data = await getJson<{ club: Club }>(`/api/clubs/${encodeURIComponent(slug)}`);
   return data?.club ?? null;
-}
+});
