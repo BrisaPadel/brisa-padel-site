@@ -11,7 +11,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
-  ArrowUpRight, CheckCircle2, Info, LoaderCircle, Search, SlidersHorizontal, Star
+  ArrowUpRight, CheckCircle2, Info, LoaderCircle, Search, SlidersHorizontal, Star, XCircle
 } from 'lucide-react';
 import { CLUBS_RETURN_KEY } from './BackToClubsLink';
 import ClubCardSkeleton from './ClubCardSkeleton';
@@ -47,19 +47,58 @@ function Label({ children }: { children: React.ReactNode }) {
 }
 
 function ClubCard({ club }: { club: Club }) {
-  const verifiedCount = [club.hours, club.courtCount, club.phone, club.setting, club.climateControl, club.ceilingHeight, club.ownership]
-    .filter(isVerified).length;
+  const verificationFields = [
+    { label: 'Hours', value: club.hours },
+    { label: 'Court count', value: club.courtCount },
+    { label: 'Contact number', value: club.phone },
+    { label: 'Court setting', value: club.setting },
+    { label: 'Indoor AC', value: club.climateControl },
+    { label: 'Ceiling height', value: club.ceilingHeight },
+    { label: 'Ownership', value: club.ownership }
+  ].map((field) => ({ ...field, verified: isVerified(field.value) }));
+  const verifiedCount = verificationFields.filter((field) => field.verified).length;
+  const tooltipId = `verification-${club.slug}`;
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden border border-stone-200 bg-white shadow-[0_10px_35px_-25px_rgba(41,37,36,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_rgba(41,37,36,0.42)]">
+    <article className="group relative flex h-full flex-col overflow-visible border border-stone-200 bg-white shadow-[0_10px_35px_-25px_rgba(41,37,36,0.35)] transition-all duration-300 hover:z-20 hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_rgba(41,37,36,0.42)] focus-within:z-20">
       <div className="h-1.5 bg-gradient-to-r from-[#F26419] via-[#f99a62] to-[#f8efe8]" />
       <div className="flex flex-1 flex-col p-6">
-        <div className="flex h-[4.5rem] items-start justify-between gap-4 overflow-hidden">
+        <div className="flex h-[4.5rem] items-start justify-between gap-4">
           <div className="min-w-0 overflow-hidden">
             <p className="text-[0.65rem] font-bold tracking-[0.15em] uppercase text-[#F26419]">{club.neighborhood}</p>
             <h2 style={{ fontFamily: "'Cormorant Garamond', serif" }} className="mt-1 text-2xl font-bold leading-tight text-stone-900">{club.name}</h2>
           </div>
-          <span className="shrink-0 border border-stone-200 bg-stone-50 px-2 py-1 text-[0.62rem] font-bold tracking-[0.1em] uppercase text-stone-500">{verifiedCount}/7 verified</span>
+          <div className="relative z-30 shrink-0">
+            <button
+              type="button"
+              aria-describedby={tooltipId}
+              className="peer border border-stone-200 bg-stone-50 px-2 py-1 text-[0.62rem] font-bold tracking-[0.1em] uppercase text-stone-500 outline-none transition-colors hover:border-[#F26419]/50 hover:text-[#c44b0c] focus-visible:border-[#F26419] focus-visible:ring-2 focus-visible:ring-[#F26419]/20"
+            >
+              {verifiedCount}/7 verified
+            </button>
+            <div
+              id={tooltipId}
+              role="tooltip"
+              className="pointer-events-none invisible absolute right-0 top-full z-50 mt-2 w-64 translate-y-1 border border-stone-200 bg-white p-3 opacity-0 shadow-[0_16px_40px_-18px_rgba(41,37,36,0.5)] transition-all duration-150 peer-hover:visible peer-hover:translate-y-0 peer-hover:opacity-100 peer-focus:visible peer-focus:translate-y-0 peer-focus:opacity-100"
+            >
+              <p className="mb-2 border-b border-stone-100 pb-2 text-[0.65rem] font-bold uppercase tracking-[0.14em] text-stone-700">
+                Verified club details
+              </p>
+              <ul className="space-y-1.5">
+                {verificationFields.map((field) => (
+                  <li key={field.label} className="flex items-center gap-2 text-xs text-stone-600">
+                    {field.verified ? (
+                      <CheckCircle2 size={14} className="shrink-0 text-emerald-600" aria-hidden="true" />
+                    ) : (
+                      <XCircle size={14} className="shrink-0 text-red-500" aria-hidden="true" />
+                    )}
+                    <span>{field.label}</span>
+                    <span className="sr-only">: {field.verified ? 'verified' : 'not verified'}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
 
         <div className="mt-4 h-[44px] overflow-hidden">
