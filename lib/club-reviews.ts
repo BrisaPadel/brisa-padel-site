@@ -17,6 +17,42 @@ export const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 
 const API_BASE_URL = '';
 
+/** Statuses a member can see on their own review. */
+export type AuthoredReviewStatus = 'pending' | 'approved' | 'rejected' | 'removed';
+
+export type AuthoredReview = {
+  id: string;
+  status: AuthoredReviewStatus;
+  datePlayed: string;
+  matchType: string;
+  experience: string;
+  rating: number;
+  createdAt: string;
+};
+
+/**
+ * The signed-in member's own reviews of one club, including the ones the public
+ * list hides. Returns an empty list rather than an error when the session has
+ * expired: this only decorates the page, and a stale token should not stop the
+ * reviews themselves from rendering.
+ */
+export async function fetchMyReviews(slug: string, token: string): Promise<AuthoredReview[]> {
+  if (!token) return [];
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/api/clubs/${encodeURIComponent(slug)}/reviews/mine`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    if (!response.ok) return [];
+    const payload = (await response.json().catch(() => null)) as
+      | { success?: boolean; data?: { reviews?: AuthoredReview[] } }
+      | null;
+    return payload?.data?.reviews ?? [];
+  } catch {
+    return [];
+  }
+}
+
 export type SubmitReviewResult =
   | { ok: true }
   // `expired` lets the form send the member back to sign-in instead of showing

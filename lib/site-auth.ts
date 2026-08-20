@@ -13,6 +13,39 @@
 
 const TOKEN_KEY = 'BrisaDirectoryToken';
 const EMAIL_KEY = 'BrisaDirectoryEmail';
+const NAME_KEY = 'BrisaDirectoryName';
+
+/**
+ * Reads the display name out of the access token.
+ *
+ * The verify-otp response returns id, email and role but not the member's name,
+ * and the name is only wanted to show them who they are about to post as. The
+ * token already carries it, so this avoids a second request for one string.
+ *
+ * For display only. The server takes the published name from its own copy of
+ * the token, so nothing here can change what a review is posted under.
+ */
+function nameFromToken(token: string): string {
+  try {
+    const payload = token.split('.')[1];
+    if (!payload) return '';
+    // base64url -> base64, then pad to a multiple of four.
+    const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+    const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), '=');
+    const decoded = JSON.parse(
+      decodeURIComponent(
+        atob(padded)
+          .split('')
+          .map((char) => `%${char.charCodeAt(0).toString(16).padStart(2, '0')}`)
+          .join('')
+      )
+    ) as { name?: string; email?: string };
+    return (decoded.name || decoded.email || '').trim();
+  } catch {
+    // A token we cannot read is still a usable token; only the name is lost.
+    return '';
+  }
+}
 
 export type AuthResult<T> = { ok: true; data: T } | { ok: false; message: string };
 
@@ -29,10 +62,26 @@ export function storedEmail(): string {
   return window.localStorage.getItem(EMAIL_KEY) ?? '';
 }
 
+/**
+ * The member's name, for showing who a review will be posted as.
+ *
+ * Derived from the stored token on every call rather than from a saved copy.
+ * A saved copy is only written when someone signs in, so sessions created
+ * before this existed would have no name and silently fall back to placeholder
+ * text — and a copy can drift from the token it was taken from. The token is
+ * the one thing always present when signed in, so it is the thing to read.
+ */
+export function storedName(): string {
+  return nameFromToken(storedToken());
+}
+
 export function clearSession() {
   if (typeof window === 'undefined') return;
   window.localStorage.removeItem(TOKEN_KEY);
   window.localStorage.removeItem(EMAIL_KEY);
+  // Written by earlier builds, which read the name from storage instead of the
+  // token. Cleared here so a stale copy cannot outlive the session.
+  window.localStorage.removeItem(NAME_KEY);
 }
 
 function rememberSession(token: string, email: string) {

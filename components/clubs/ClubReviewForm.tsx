@@ -18,6 +18,7 @@ import {
   requestCaptcha,
   requestOtp,
   storedEmail,
+  storedName,
   storedToken,
   verifyOtp,
   type Captcha
@@ -241,6 +242,7 @@ export default function ClubReviewForm({
 
   useEffect(() => {
     setToken(storedToken());
+    setReviewerName(storedName());
     setCheckedSession(true);
   }, []);
 
@@ -331,7 +333,16 @@ export default function ClubReviewForm({
           <LoaderCircle size={18} className="mx-auto animate-spin text-stone-400" />
         </div>
       ) : !token ? (
-        <SignInPanel clubName={clubName} onClose={onClose} onSignedIn={setToken} />
+        <SignInPanel
+          clubName={clubName}
+          onClose={onClose}
+          onSignedIn={(next) => {
+            setToken(next);
+            // Read after the session is stored, so the form opens already
+            // showing the name the review will be published under.
+            setReviewerName(storedName());
+          }}
+        />
       ) : (
       <form
         onSubmit={handleSubmit}
@@ -366,18 +377,15 @@ export default function ClubReviewForm({
         </p>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          <label>
-            <span className="text-[0.65rem] font-bold uppercase tracking-[0.13em] text-stone-500">
-              Your name (optional)
-            </span>
-            <input
-              value={reviewerName}
-              onChange={(event) => setReviewerName(event.target.value)}
-              maxLength={80}
-              placeholder="Shown as Anonymous player if blank"
-              className="mt-2 w-full border border-stone-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-[#F26419] focus:ring-2 focus:ring-[#F26419]/15"
-            />
-          </label>
+          <div>
+            <span className={labelClass}>Posting as</span>
+            {/* Read-only: the server publishes the name on the member's account
+                and ignores anything sent in the body, so an editable field here
+                would only promise something it cannot deliver. */}
+            <p className="mt-2 w-full border border-stone-200 bg-stone-50 px-3 py-2.5 text-sm text-stone-700">
+              {reviewerName || 'Your Brisa account name'}
+            </p>
+          </div>
           <ThemedDatePicker label="Date played" value={datePlayed} onChange={setDatePlayed} />
         </div>
 

@@ -17,8 +17,16 @@ import { CLUBS_RETURN_KEY } from './BackToClubsLink';
 import ClubCardSkeleton from './ClubCardSkeleton';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import ClubFilterModal from './ClubFilterModal';
 import { SEARCH_DEBOUNCE_MS, fetchClubs } from '@/lib/clubs-client';
 import type { Club } from '@/lib/clubs';
+import {
+  EMPTY_FILTERS,
+  countActiveFilters,
+  toClubQueryString,
+  type ClubFilters,
+  type Setting
+} from '@/lib/club-filters';
 
 const UNVERIFIED = 'Not verified by club';
 
@@ -43,28 +51,20 @@ function ClubCard({ club }: { club: Club }) {
     .filter(isVerified).length;
 
   return (
-    <article className="group relative overflow-hidden border border-stone-200 bg-white shadow-[0_10px_35px_-25px_rgba(41,37,36,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_rgba(41,37,36,0.42)]">
+    <article className="group relative flex h-full flex-col overflow-hidden border border-stone-200 bg-white shadow-[0_10px_35px_-25px_rgba(41,37,36,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_rgba(41,37,36,0.42)]">
       <div className="h-1.5 bg-gradient-to-r from-[#F26419] via-[#f99a62] to-[#f8efe8]" />
-      {club.heroImageUrl && (
-        <div className="aspect-[16/9] w-full overflow-hidden bg-stone-100">
-          <img
-            src={club.heroImageUrl}
-            alt={club.name}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-            loading="lazy"
-          />
-        </div>
-      )}
-      <div className="p-6">
-        <div className="flex items-start justify-between gap-4">
-          <div>
+      <div className="flex flex-1 flex-col p-6">
+        <div className="flex h-[4.5rem] items-start justify-between gap-4 overflow-hidden">
+          <div className="min-w-0 overflow-hidden">
             <p className="text-[0.65rem] font-bold tracking-[0.15em] uppercase text-[#F26419]">{club.neighborhood}</p>
             <h2 style={{ fontFamily: "'Cormorant Garamond', serif" }} className="mt-1 text-2xl font-bold leading-tight text-stone-900">{club.name}</h2>
           </div>
           <span className="shrink-0 border border-stone-200 bg-stone-50 px-2 py-1 text-[0.62rem] font-bold tracking-[0.1em] uppercase text-stone-500">{verifiedCount}/7 verified</span>
         </div>
 
-        <p className="mt-4 min-h-[44px] text-sm leading-relaxed text-stone-600">{club.vibe}</p>
+        <div className="mt-4 h-[44px] overflow-hidden">
+          <p className="text-sm leading-relaxed text-stone-600">{club.vibe}</p>
+        </div>
 
         <div className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 border-y border-stone-100 py-4">
           <div>
@@ -94,11 +94,13 @@ function ClubCard({ club }: { club: Club }) {
           </div>
           <div className="col-span-2">
             <Label>Hours</Label>
-            <p className="mt-1 text-sm leading-snug"><DataValue value={club.hours} /></p>
+            <div className="min-h-[40px] overflow-hidden">
+              <p className="mt-1 text-sm leading-snug"><DataValue value={club.hours} /></p>
+            </div>
           </div>
         </div>
 
-        <div className="mt-5 flex items-center gap-2">
+        <div className="mt-auto flex items-center gap-2 pt-5">
           <Link href={`/clubs/${club.slug}`} className="flex flex-1 items-center justify-center gap-2 border border-stone-900 px-3 py-2.5 text-xs font-bold tracking-[0.1em] uppercase text-stone-900 transition-colors hover:border-[#F26419] hover:bg-[#F26419] hover:text-white">
             Compare details <ArrowUpRight size={14} />
           </Link>
@@ -108,37 +110,28 @@ function ClubCard({ club }: { club: Club }) {
   );
 }
 
-type Setting = 'All' | 'Indoor' | 'Outdoor';
-
-/** Build the query string for a given filter state. Empty filters produce '',
- *  so the unfiltered directory keeps the clean /clubs URL. */
-function toQueryString(query: string, setting: Setting) {
-  const params = new URLSearchParams();
-  if (query.trim()) params.set('q', query.trim());
-  if (setting !== 'All') params.set('setting', setting);
-  const search = params.toString();
-  return search ? `?${search}` : '';
-}
-
 export default function ClubsDirectory({
   initialClubs,
   initialTotal,
-  initialQuery = '',
-  initialSetting = 'All'
+  initialFilters = EMPTY_FILTERS
 }: {
   initialClubs: Club[];
   initialTotal: number;
-  initialQuery?: string;
-  initialSetting?: Setting;
+  /** Parsed from the URL on the server, so page one arrives already filtered. */
+  initialFilters?: ClubFilters;
 }) {
   const router = useRouter();
   const pathname = usePathname();
 
-  // What the user has typed, and the value the API is actually queried with.
-  // Separating them is what makes the debounce work without racing the filters.
-  const [query, setQuery] = useState(initialQuery);
-  const [appliedQuery, setAppliedQuery] = useState(initialQuery);
-  const [settingFilter, setSettingFilter] = useState<Setting>(initialSetting);
+  // What the user has typed, versus what has actually been applied. Separating
+  // them is what makes the debounce work without racing the other filters.
+  const [query, setQuery] = useState(initialFilters.q);
+  // Every applied filter, including the settled search text. One object so the
+  // URL, the API call and the modal all read from the same description.
+  const [filters, setFilters] = useState<ClubFilters>(initialFilters);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  const activeFilterCount = countActiveFilters(filters);
 
   const [clubs, setClubs] = useState<Club[]>(initialClubs);
   const [total, setTotal] = useState(initialTotal);
@@ -149,7 +142,7 @@ export default function ClubsDirectory({
   // Appending keeps the existing cards on screen; replacing swaps in skeletons.
   const [isAppending, setIsAppending] = useState(false);
 
-  const isTypingPending = query !== appliedQuery;
+  const isTypingPending = query !== filters.q;
 
   // The server already rendered page 1 for these exact filters; refetching on
   // mount would throw that away and flash the list.
@@ -163,22 +156,18 @@ export default function ClubsDirectory({
   // clicking straight into a club still comes back filtered.
   useEffect(() => {
     try {
-      sessionStorage.setItem(CLUBS_RETURN_KEY, toQueryString(appliedQuery, settingFilter));
+      sessionStorage.setItem(CLUBS_RETURN_KEY, toClubQueryString(filters));
     } catch {
       // sessionStorage can throw in private mode; the plain /clubs link remains.
     }
-  }, [appliedQuery, settingFilter]);
+  }, [filters]);
 
   const load = useCallback(
     async (nextPage: number, append: boolean) => {
       const id = ++requestId.current;
       setIsAppending(append);
       setIsLoading(true);
-      const result = await fetchClubs({
-        q: appliedQuery,
-        setting: settingFilter === 'All' ? '' : settingFilter,
-        page: nextPage
-      });
+      const result = await fetchClubs({ ...filters, page: nextPage });
       if (id !== requestId.current) return;
       setClubs((current) => (append ? [...current, ...result.clubs] : result.clubs));
       setTotal(result.total);
@@ -187,15 +176,18 @@ export default function ClubsDirectory({
       setIsLoading(false);
       setIsAppending(false);
     },
-    [appliedQuery, settingFilter]
+    [filters]
   );
 
-  // Typing settles into appliedQuery after the debounce.
+  // Typing settles into the applied filters after the debounce.
   useEffect(() => {
-    if (query === appliedQuery) return;
-    const timer = setTimeout(() => setAppliedQuery(query), SEARCH_DEBOUNCE_MS);
+    if (query === filters.q) return;
+    const timer = setTimeout(
+      () => setFilters((current) => ({ ...current, q: query })),
+      SEARCH_DEBOUNCE_MS
+    );
     return () => clearTimeout(timer);
-  }, [query, appliedQuery]);
+  }, [query, filters.q]);
 
   // One place fetches, and the same place writes the filters into the URL, so
   // the address bar always describes what is on screen. Reloading, sharing or
@@ -207,15 +199,16 @@ export default function ClubsDirectory({
       isFirstRun.current = false;
       return;
     }
-    router.replace(`${pathname}${toQueryString(appliedQuery, settingFilter)}`, { scroll: false });
+    router.replace(`${pathname}${toClubQueryString(filters)}`, { scroll: false });
     void load(1, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [appliedQuery, settingFilter]);
+  }, [filters]);
 
   const clearFilters = () => {
     setQuery('');
-    setAppliedQuery('');   // skip the debounce — the user asked for this now
-    setSettingFilter('All');
+    // Set together, so clearing is one navigation and one refetch rather than
+    // the search and the filters each triggering their own.
+    setFilters(EMPTY_FILTERS);
   };
 
   return (
@@ -247,8 +240,35 @@ export default function ClubsDirectory({
                 <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search a club, neighborhood, or address" className="w-full border border-stone-200 bg-stone-50 py-3 pl-10 pr-4 text-sm text-stone-900 outline-none transition-colors placeholder:text-stone-400 focus:border-[#F26419] focus:bg-white focus:ring-2 focus:ring-[#F26419]/10" />
               </label>
               <div className="flex items-center gap-2 overflow-x-auto">
-                <span className="hidden items-center gap-1.5 px-2 text-xs font-bold uppercase tracking-[0.11em] text-stone-400 sm:flex"><SlidersHorizontal size={14} /> Filter</span>
-                {(['All', 'Indoor', 'Outdoor'] as const).map((filter) => <button key={filter} onClick={() => setSettingFilter(filter)} className={`whitespace-nowrap border px-3.5 py-3 text-xs font-bold uppercase tracking-[0.09em] transition-colors ${settingFilter === filter ? 'border-[#F26419] bg-[#F26419] text-white' : 'border-stone-200 text-stone-600 hover:border-[#F26419]/50 hover:text-[#F26419]'}`}>{filter}</button>)}
+                <button
+                  type="button"
+                  onClick={() => setIsFilterOpen(true)}
+                  aria-haspopup="dialog"
+                  className={`flex items-center gap-1.5 whitespace-nowrap border px-3.5 py-3 text-xs font-bold uppercase tracking-[0.11em] transition-colors ${
+                    activeFilterCount > 0
+                      ? 'border-[#F26419] text-[#c44b0c]'
+                      : 'border-stone-200 text-stone-600 hover:border-[#F26419]/50 hover:text-[#F26419]'
+                  }`}
+                >
+                  <SlidersHorizontal size={14} /> Filter
+                  {activeFilterCount > 0 && (
+                    <span className="ml-0.5 inline-flex h-4 min-w-4 items-center justify-center bg-[#F26419] px-1 text-[0.6rem] text-white">
+                      {activeFilterCount}
+                    </span>
+                  )}
+                </button>
+                {/* Kept alongside the modal as a shortcut for the most-used
+                    filter. Both write the same URL param, so they cannot
+                    disagree about what is applied. */}
+                {(['All', 'Indoor', 'Outdoor'] as const).map((setting) => (
+                  <button
+                    key={setting}
+                    onClick={() => setFilters((current) => ({ ...current, setting: setting as Setting }))}
+                    className={`whitespace-nowrap border px-3.5 py-3 text-xs font-bold uppercase tracking-[0.09em] transition-colors ${filters.setting === setting ? 'border-[#F26419] bg-[#F26419] text-white' : 'border-stone-200 text-stone-600 hover:border-[#F26419]/50 hover:text-[#F26419]'}`}
+                  >
+                    {setting}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
@@ -303,6 +323,19 @@ export default function ClubsDirectory({
         </section>
       </main>
       <Footer />
+
+      {isFilterOpen && (
+        <ClubFilterModal
+          initial={filters}
+          onClose={() => setIsFilterOpen(false)}
+          onApply={(next) => {
+            setIsFilterOpen(false);
+            // The modal never edits the search box, so its `q` is carried
+            // through unchanged and a pending keystroke is not discarded.
+            setFilters({ ...next, q: filters.q });
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -11,6 +11,7 @@
 
 import BackToClubsLink from './BackToClubsLink';
 import ClubReviewsSection from './ClubReviewsSection';
+import ExpandableText from '@/components/ui/ExpandableText';
 import {
   ArrowLeft, ArrowUpRight, CalendarDays, Clock3, DollarSign, Droplets,
   ExternalLink, Info, MapPin, MessageCircle, Phone, Ruler, Snowflake,
@@ -99,7 +100,11 @@ export default function ClubProfileView({
                 <h1 style={{ fontFamily: "'Cormorant Garamond', serif" }} className="text-5xl font-bold leading-[0.92] text-stone-900 sm:text-6xl">{club.name}</h1>
                 <div className="sm:justify-self-end"><ClubStandardBadge score={clubStandardScore} isPreview={editorialPreviewScore !== undefined} /></div>
               </div>
-              <p className="mt-5 max-w-3xl text-base leading-relaxed text-stone-600">{club.description}</p>
+              <ExpandableText
+                text={club.description}
+                lines={4}
+                className="mt-5 max-w-3xl text-base leading-relaxed text-stone-600"
+              />
             </div>
           </div>
         </section>
@@ -107,7 +112,7 @@ export default function ClubProfileView({
         <section className="mx-auto max-w-[1280px] px-6 py-12 lg:px-10">
           <div className="grid gap-10 lg:grid-cols-[1.25fr_0.75fr]">
             <div className="space-y-8">
-              <section><p className="text-[0.65rem] font-bold uppercase tracking-[0.17em] text-[#F26419]">Club character</p><h2 style={{ fontFamily: "'Cormorant Garamond', serif" }} className="mt-2 text-4xl font-bold text-stone-900">The Brisa read</h2><div className="mt-5 border-l-2 border-[#F26419] bg-[#fff5ef] px-5 py-4"><p className="text-base leading-relaxed text-stone-800">{club.vibe}</p><div className="mt-5 border-t border-[#f4d9c8] pt-4"><p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-stone-500">Ownership</p><p className="mt-1.5 text-sm leading-relaxed"><DataValue value={club.ownership} /></p></div></div></section>
+              <section><p className="text-[0.65rem] font-bold uppercase tracking-[0.17em] text-[#F26419]">Club character</p><h2 style={{ fontFamily: "'Cormorant Garamond', serif" }} className="mt-2 text-4xl font-bold text-stone-900">The Brisa read</h2><div className="mt-5 border-l-2 border-[#F26419] bg-[#fff5ef] px-5 py-4"><ExpandableText text={club.vibe} lines={4} className="text-base leading-relaxed text-stone-800" /><div className="mt-5 border-t border-[#f4d9c8] pt-4"><p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-stone-500">Ownership</p><p className="mt-1.5 text-sm leading-relaxed"><DataValue value={club.ownership} /></p></div></div></section>
 
               <section className="border border-stone-200 bg-white p-6"><div><p className="text-[0.65rem] font-bold uppercase tracking-[0.17em] text-[#F26419]">Facility ledger</p><h2 style={{ fontFamily: "'Cormorant Garamond', serif" }} className="mt-2 text-4xl font-bold text-stone-900">Club context</h2></div><div className="mt-7 grid gap-x-8 md:grid-cols-2"><div><DetailRow icon={<Clock3 size={16} />} label="Hours" value={club.hours} /><DetailRow icon={<Clock3 size={16} />} label="Peak / off-peak times" value={club.peakOffPeakTimes} /><DetailRow icon={club.setting === 'Indoor' ? <Snowflake size={16} /> : <Sun size={16} />} label="Court setting" value={`${club.setting} · ${club.courtCount}`} /><DetailRow icon={<Wind size={16} />} label="Indoor AC" value={club.climateControl} /><DetailRow icon={<Ruler size={16} />} label="Indoor ceiling height (ft / m)" value={formatCeilingHeight(club)} /><DetailRow icon={<DollarSign size={16} />} label="Peak / off-peak court rate" value={`${club.peakRate} / ${club.offPeakRate}`} /></div><div><DetailRow icon={<CalendarDays size={16} />} label="Last court replacement" value={club.courtReplacement} /><DetailRow icon={<Sparkles size={16} />} label="Court quality" value={club.courtQuality} /><DetailRow icon={<Ruler size={16} />} label="Room for outside play" value={club.outsidePlayRoom} /><DetailRow icon={<Wind size={16} />} label="Court speed" value={club.courtSpeed} /><DetailRow icon={<Sparkles size={16} />} label="Facility cleanliness" value={club.facilityCleanliness} /><DetailRow icon={<Droplets size={16} />} label="Shower quality" value={club.showerQuality} /></div></div></section>
 

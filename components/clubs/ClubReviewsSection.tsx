@@ -1,9 +1,40 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Star } from 'lucide-react';
 import ClubReviewForm from './ClubReviewForm';
 import type { ClubReview } from '@/lib/clubs';
+import { fetchMyReviews, type AuthoredReview, type AuthoredReviewStatus } from '@/lib/club-reviews';
+import { storedToken } from '@/lib/site-auth';
+
+/**
+ * How each hidden status is explained to the member who wrote it.
+ *
+ * `rejected` and `removed` are worded differently on purpose: one is a verdict
+ * on what they wrote, the other is the review being taken down. Telling someone
+ * their review was "rejected" when an admin simply deleted it would misrepresent
+ * what happened.
+ */
+const AUTHOR_STATUS: Record<
+  Exclude<AuthoredReviewStatus, 'approved'>,
+  { title: string; detail: string; className: string }
+> = {
+  pending: {
+    className: 'border-[#F26419] bg-[#fff5ef]',
+    detail: 'It will appear here publicly once Brisa has approved it.',
+    title: 'Your review is being reviewed.'
+  },
+  rejected: {
+    className: 'border-red-400 bg-red-50',
+    detail: 'It did not meet Brisa’s review guidelines and will not be published.',
+    title: 'Your review was rejected.'
+  },
+  removed: {
+    className: 'border-stone-400 bg-stone-100',
+    detail: 'It has been taken down by Brisa and is no longer published.',
+    title: 'Your review was removed.'
+  }
+};
 
 function Stars({ rating, size = 14 }: { rating: number; size?: number }) {
   return (
@@ -34,6 +65,29 @@ export default function ClubReviewsSection({
 }) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [mine, setMine] = useState<AuthoredReview[]>([]);
+
+  /**
+   * A member's own reviews are fetched in the browser, not rendered on the
+   * server: the page is statically cacheable per club, and personalising it
+   * server-side would make one visitor's moderation state cacheable for all.
+   */
+  const refreshMine = useCallback(() => {
+    const token = storedToken();
+    if (!token) return setMine([]);
+    void fetchMyReviews(slug, token).then(setMine);
+  }, [slug]);
+
+  useEffect(refreshMine, [refreshMine]);
+
+  // Approved reviews are already in the public list below, so showing them
+  // again as "yours" would duplicate them. Only the hidden states are news.
+  // Typed as a guard so the status is narrowed for the AUTHOR_STATUS lookup,
+  // which has no entry for `approved` by design.
+  const pendingMine = mine.filter(
+    (review): review is AuthoredReview & { status: Exclude<AuthoredReviewStatus, 'approved'> } =>
+      review.status !== 'approved'
+  );
 
   return (
     <section>
@@ -66,6 +120,29 @@ export default function ClubReviewsSection({
         </div>
       )}
 
+      {/* Visible only to the member who wrote them: pending, rejected and
+          removed reviews are absent from the public list, so without this the
+          author has no way to learn what became of their submission. */}
+      {pendingMine.length > 0 && (
+        <ul className="mt-6 space-y-2">
+          {pendingMine.map((review) => {
+            const tone = AUTHOR_STATUS[review.status];
+            return (
+              <li
+                key={review.id}
+                className={`border-l-2 px-4 py-3 text-sm leading-relaxed ${tone.className}`}
+              >
+                <span className="font-semibold">{tone.title}</span>{' '}
+                <span className="text-stone-600">{tone.detail}</span>
+                <span className="mt-1 block text-xs text-stone-400">
+                  {review.matchType} · played {review.datePlayed}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
       {reviews.length > 0 ? (
         <div className="mt-6 divide-y divide-stone-200 border-y border-stone-200">
           {reviews.map((review) => (
@@ -84,7 +161,14 @@ export default function ClubReviewsSection({
                   })}
                 </time>
               </div>
-              <p className="mt-3 text-sm leading-relaxed text-stone-700">{review.experience}</p>
+              {/* Reviews are written in a textarea, so the paragraph breaks a
+                  player typed are part of what they wrote. HTML collapses them
+                  by default, which ran separate points together into one wall
+                  of text. `pre-line` keeps the newlines while still wrapping
+                  normally, and still collapses runs of spaces. */}
+              <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-stone-700">
+                {review.experience}
+              </p>
               {review.images.length > 0 && (
                 <div className="mt-4 grid max-w-lg grid-cols-2 gap-2 sm:grid-cols-3">
                   {review.images.map((image) => (
@@ -127,6 +211,9 @@ export default function ClubReviewsSection({
           onSubmitted={() => {
             setIsFormOpen(false);
             setHasSubmitted(true);
+            // The submission is now one of the member's own reviews, so the
+            // pending notice should appear without waiting for a reload.
+            refreshMine();
           }}
         />
       )}

@@ -1,5 +1,6 @@
 import 'server-only';
 import { cache } from 'react';
+import { EMPTY_FILTERS, serializeClubFilters, type ClubFilters } from './club-filters';
 
 /** Mirrors PublicClub in brisa-padel-server/src/modules/clubs/types. */
 export type ClubMetaTags = {
@@ -105,11 +106,15 @@ async function getJson<T>(path: string): Promise<T | null> {
 }
 
 export async function listClubs(
-  filters: { q?: string; setting?: string; limit?: number } = {}
+  filters: Partial<ClubFilters> & { limit?: number } = {}
 ): Promise<{ clubs: Club[]; total: number }> {
-  const search = new URLSearchParams({ limit: String(filters.limit ?? 24) });
-  if (filters.q?.trim()) search.set('q', filters.q.trim());
-  if (filters.setting) search.set('setting', filters.setting);
+  // The same serializer the browser and the address bar use, so the first
+  // server-rendered page cannot be built from different filters than the ones
+  // the URL advertises.
+  const search = new URLSearchParams(
+    serializeClubFilters({ ...EMPTY_FILTERS, ...filters })
+  );
+  search.set('limit', String(filters.limit ?? 24));
   const data = await getJson<{ clubs: Club[]; total: number }>(`/api/clubs?${search.toString()}`);
   return { clubs: data?.clubs ?? [], total: data?.total ?? 0 };
 }

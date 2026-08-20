@@ -1,4 +1,5 @@
 import type { Club } from './clubs';
+import { serializeClubFilters, type ClubFilters } from './club-filters';
 
 /** Cards fetched per page. Matches the API's own default. */
 export const PAGE_SIZE = 24;
@@ -21,17 +22,37 @@ export type ClubsPage = {
   hasMore: boolean;
 };
 
-export async function fetchClubs(params: {
-  q: string;
-  setting: string;
-  page: number;
-}): Promise<ClubsPage> {
-  const search = new URLSearchParams({
-    page: String(params.page),
-    limit: String(PAGE_SIZE)
-  });
-  if (params.q.trim()) search.set('q', params.q.trim());
-  if (params.setting) search.set('setting', params.setting);
+/** The area and city values published clubs actually use, with their counts. */
+export type ClubFilterOptions = {
+  areas: Array<{ name: string; count: number }>;
+  cities: Array<{ name: string; count: number }>;
+};
+
+/**
+ * Options for the filter modal. Returns empty lists on failure rather than
+ * throwing: the modal still opens, just without area and city choices, which
+ * beats blocking every other filter because one request blipped.
+ */
+export async function fetchClubFilterOptions(): Promise<ClubFilterOptions> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/clubs/filters`, {
+      headers: { accept: 'application/json' }
+    });
+    if (!response.ok) throw new Error(`Filter options failed: ${response.status}`);
+    const payload = (await response.json()) as { success?: boolean; data?: ClubFilterOptions };
+    if (!payload?.success || !payload.data) throw new Error('Malformed filter options');
+    return payload.data;
+  } catch {
+    return { areas: [], cities: [] };
+  }
+}
+
+export async function fetchClubs(params: ClubFilters & { page: number }): Promise<ClubsPage> {
+  // Reuses the same serializer as the address bar, so what the API is asked for
+  // and what the URL claims can never drift apart.
+  const search = new URLSearchParams(serializeClubFilters(params));
+  search.set('page', String(params.page));
+  search.set('limit', String(PAGE_SIZE));
 
   try {
     const response = await fetch(`${API_BASE_URL}/api/clubs?${search.toString()}`, {

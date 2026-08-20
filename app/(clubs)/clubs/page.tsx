@@ -2,28 +2,34 @@ import type { Metadata } from 'next';
 import ClubsDirectory from '@/components/clubs/ClubsDirectory';
 import { listClubs } from '@/lib/clubs';
 import { buildMetadata } from '@/lib/seo';
+import { countActiveFilters, parseClubFilters } from '@/lib/club-filters';
 
 // Always reflect the current database state rather than a cached render.
 export const dynamic = 'force-dynamic';
 
 type PageProps = {
-  searchParams: Promise<{ q?: string | string[]; setting?: string | string[] }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-const first = (value: string | string[] | undefined) =>
-  (Array.isArray(value) ? value[0] : value) ?? '';
-
-/** Only the two real settings filter; anything else means "all". */
-const normalizeSetting = (value: string) =>
-  value === 'Indoor' || value === 'Outdoor' ? value : '';
+/**
+ * Next gives repeated params as arrays; the filter parser speaks query strings,
+ * so the params are put back into one. Rebuilding it here rather than reading
+ * each key by hand keeps a single definition of how a filter is spelled.
+ */
+const toSearchString = (params: Record<string, string | string[] | undefined>) => {
+  const search = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    const first = Array.isArray(value) ? value[0] : value;
+    if (first !== undefined) search.set(key, first);
+  }
+  return search.toString();
+};
 
 export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
-  const params = await searchParams;
-  const query = first(params.q).trim();
-  const setting = normalizeSetting(first(params.setting));
-  const isFiltered = Boolean(query || setting);
+  const filters = parseClubFilters(toSearchString(await searchParams));
+  const isFiltered = Boolean(filters.q) || countActiveFilters(filters) > 0;
 
-  const metadata = buildMetadata({
+  return buildMetadata({
     title: 'Miami Padel Clubs | Brisa Club Intelligence',
     description:
       'A transparent Miami padel club directory: court environment, pricing visibility, coach access, operating hours, and verified facility facts.',
@@ -34,25 +40,15 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
     // A filtered result set is a view of the same content, not new content.
     index: !isFiltered
   });
-
-  return metadata;
 }
 
 export default async function Page({ searchParams }: PageProps) {
-  const params = await searchParams;
-  const query = first(params.q).trim();
-  const setting = normalizeSetting(first(params.setting));
+  const filters = parseClubFilters(toSearchString(await searchParams));
 
   // Rendered on the server with the filters already applied, so a shared or
   // reloaded URL shows the same results without waiting for client JavaScript.
-  const { clubs, total } = await listClubs({ q: query, setting });
+  // The same serializer feeds the API and the address bar, so the two agree.
+  const { clubs, total } = await listClubs(filters);
 
-  return (
-    <ClubsDirectory
-      initialClubs={clubs}
-      initialTotal={total}
-      initialQuery={query}
-      initialSetting={setting === '' ? 'All' : (setting as 'Indoor' | 'Outdoor')}
-    />
-  );
+  return <ClubsDirectory initialClubs={clubs} initialTotal={total} initialFilters={filters} />;
 }
