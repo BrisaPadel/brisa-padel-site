@@ -35,5 +35,7 @@ export const translations = {
   }
 } as const;
 
-export const HERO_IMG =
-  'https://d2xsxph8kpxj0f.cloudfront.net/310519663394291819/T7p78GMGDvrFnfDAkMdFP2/hero_main_cc5d2bd5.jpg';
+// Served from public/. The CloudFront bucket this used to load from returns
+// 403 AccessDenied, so the asset lives in the repo rather than off a URL that
+// can stop resolving without anything here changing.
+export const HERO_IMG = '/hero-main.jpg';

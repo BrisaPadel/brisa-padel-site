@@ -22,8 +22,16 @@ export const STATIC_BASE_PATHS: BasePath[] = [
   '/privacy'
 ];
 
-export const SOCIAL_IMAGE =
-  'https://d2xsxph8kpxj0f.cloudfront.net/310519663394291819/T7p78GMGDvrFnfDAkMdFP2/hero_main_cc5d2bd5.jpg';
+/*
+  Served from public/. The CloudFront bucket this used to load from returns 403
+  AccessDenied, so the asset lives in the repo instead of behind a URL that can
+  stop resolving without anything here changing.
+
+  Root-relative is safe for a social image here: buildMetadata sets
+  metadataBase, and the one call site that builds the tag itself runs it through
+  absoluteImageUrl — both give crawlers the absolute URL they need.
+*/
+export const SOCIAL_IMAGE = '/hero-main.jpg';
 
 /**
  * Absolute form of an image URL, for the places a relative one cannot work.
