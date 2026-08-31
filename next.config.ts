@@ -13,6 +13,30 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
 
   /**
+   * nginx sits in front of Next.js in production. Its page cache used to keep
+   * the rendered landing page for 24 hours, so a deployment could continue to
+   * serve obsolete asset URLs even though the new container was already live.
+   *
+   * X-Accel-Expires is understood by nginx's proxy cache. Keep this scoped to
+   * the two landing documents so versioned Next.js files and public images can
+   * still be cached normally.
+   */
+  async headers() {
+    const noPageCache = [
+      {
+        key: "Cache-Control",
+        value: "no-store, no-cache, must-revalidate, max-age=0"
+      },
+      { key: "X-Accel-Expires", value: "0" }
+    ];
+
+    return [
+      { source: "/", headers: noPageCache },
+      { source: "/es", headers: noPageCache }
+    ];
+  },
+
+  /**
    * The marketing domain does not host the authenticated React application.
    * Keep old/shared links working by sending them to the canonical app host
    * instead of rendering the Next.js 404 page.

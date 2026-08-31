@@ -6,10 +6,9 @@ import { buildMetadata } from '@/lib/seo';
 
 const t = translations.en;
 
-// The outer nginx layer previously retained this HTML for 24 hours, leaving
-// visitors with an obsolete CloudFront hero URL after a deployment. Render the
-// landing document dynamically so nginx receives a non-cacheable page response;
-// the large local hero asset remains independently cacheable by the browser.
+// Do not let Next.js retain the landing document between deployments. The
+// matching response headers in next.config.ts also disable the outer nginx
+// page cache; the large hero asset remains independently cacheable.
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = buildMetadata({
