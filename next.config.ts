@@ -13,6 +13,21 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
 
   /**
+   * The marketing domain does not host the authenticated React application.
+   * Keep old/shared links working by sending them to the canonical app host
+   * instead of rendering the Next.js 404 page.
+   */
+  async redirects() {
+    return [
+      {
+        destination: "https://app.brisapadel.com/client/:path*",
+        permanent: false,
+        source: "/client/:path*"
+      }
+    ];
+  },
+
+  /**
    * The browser always calls /api/clubs on its own origin, so nothing about the
    * API's host is baked into the client bundle.
    *
