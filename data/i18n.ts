@@ -38,4 +38,4 @@ export const translations = {
 // Served from public/. The CloudFront bucket this used to load from returns
 // 403 AccessDenied, so the asset lives in the repo rather than off a URL that
 // can stop resolving without anything here changing.
-export const HERO_IMG = '/hero-main.jpg';
+export const HERO_IMG = 'https://app.brisapadel.com/hero-main.jpg';
