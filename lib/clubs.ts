@@ -32,6 +32,7 @@ export type ClubReview = {
 
 export type Club = {
   id: string;
+  bookingEnabled: boolean;
   slug: string;
   name: string;
   neighborhood: string;

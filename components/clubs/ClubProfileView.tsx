@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import { webUrl } from '@/data/urls';
 import { UNVERIFIED, type Club, type ClubReview } from '@/lib/clubs';
 import { classifyClubStandard, formatCeilingHeight } from '@/lib/club-standard';
 
@@ -79,12 +80,16 @@ export default function ClubProfileView({
   editorialPreviewScore?: number;
 }) {
   const directions = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(club.address)}`;
-  const directBookingHref = club.website || directions;
+  const bookingHref = club.bookingEnabled
+    ? webUrl(
+        `/account/book-court?clubId=${encodeURIComponent(club.id)}&source=club-profile`,
+      )
+    : club.website || directions;
   const clubStandardScore = editorialPreviewScore ?? club.brisaClubStandardScore;
 
   return (
     <div className="min-h-screen bg-[#f9f7f4] text-stone-900">
-      <Navbar bookingHref={directBookingHref} bookingExternal />
+      <Navbar bookingHref={bookingHref} bookingExternal={!club.bookingEnabled} />
       <main className="pt-[72px]">
         {club.heroImageUrl && (
           <div className="h-64 w-full overflow-hidden bg-stone-200 sm:h-80 lg:h-96">
@@ -124,7 +129,7 @@ export default function ClubProfileView({
             </div>
 
             <aside className="space-y-5 lg:sticky lg:top-24 lg:h-fit">
-              <section className="border border-stone-200 bg-white p-5"><p className="text-[0.65rem] font-bold uppercase tracking-[0.15em] text-[#F26419]">Location &amp; contact</p><h2 style={{ fontFamily: "'Cormorant Garamond', serif" }} className="mt-2 text-3xl font-bold text-stone-900">Get there, get playing.</h2><a href={directBookingHref} target="_blank" rel="noreferrer" className="mt-5 flex items-center justify-center gap-2 bg-[#F26419] px-4 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white transition-colors hover:bg-[#d9500b]"><ExternalLink size={14} /> Book direct with {club.name}</a><div className="mt-5 space-y-3 border-t border-stone-100 pt-4"><p className="flex gap-2 text-sm leading-relaxed text-stone-700"><MapPin size={16} className="mt-0.5 shrink-0 text-[#F26419]" />{club.address}</p>{club.phone ? <a href={`tel:${club.phone.replace(/[^\d]/g, '')}`} className="flex items-center gap-2 text-sm font-semibold text-stone-700 hover:text-[#F26419]"><Phone size={15} className="text-[#F26419]" />{club.phone}</a> : <p className="text-sm italic text-stone-400">Phone: {UNVERIFIED}</p>}{club.whatsapp ? <a href={club.whatsapp} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm font-semibold text-stone-700 hover:text-[#F26419]"><MessageCircle size={15} className="text-[#F26419]" />WhatsApp the club</a> : <p className="flex items-center gap-2 text-sm italic text-stone-400"><MessageCircle size={15} />WhatsApp: {UNVERIFIED}</p>}{club.website && <a href={club.website} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm font-semibold text-stone-700 hover:text-[#F26419]"><ExternalLink size={15} className="text-[#F26419]" />Official website</a>}<a href={directions} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm font-semibold text-stone-700 hover:text-[#F26419]"><MapPin size={15} className="text-[#F26419]" />Get directions</a></div></section>
+              <section className="border border-stone-200 bg-white p-5"><p className="text-[0.65rem] font-bold uppercase tracking-[0.15em] text-[#F26419]">Location &amp; contact</p><h2 style={{ fontFamily: "'Cormorant Garamond', serif" }} className="mt-2 text-3xl font-bold text-stone-900">Get there, get playing.</h2><a href={bookingHref} target={club.bookingEnabled ? undefined : "_blank"} rel={club.bookingEnabled ? undefined : "noreferrer"} className="mt-5 flex items-center justify-center gap-2 bg-[#F26419] px-4 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white transition-colors hover:bg-[#d9500b]">{club.bookingEnabled ? <CalendarDays size={14} /> : <ExternalLink size={14} />} {club.bookingEnabled ? `Book a court at ${club.name}` : `Book direct with ${club.name}`}</a><div className="mt-5 space-y-3 border-t border-stone-100 pt-4"><p className="flex gap-2 text-sm leading-relaxed text-stone-700"><MapPin size={16} className="mt-0.5 shrink-0 text-[#F26419]" />{club.address}</p>{club.phone ? <a href={`tel:${club.phone.replace(/[^\d]/g, '')}`} className="flex items-center gap-2 text-sm font-semibold text-stone-700 hover:text-[#F26419]"><Phone size={15} className="text-[#F26419]" />{club.phone}</a> : <p className="text-sm italic text-stone-400">Phone: {UNVERIFIED}</p>}{club.whatsapp ? <a href={club.whatsapp} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm font-semibold text-stone-700 hover:text-[#F26419]"><MessageCircle size={15} className="text-[#F26419]" />WhatsApp the club</a> : <p className="flex items-center gap-2 text-sm italic text-stone-400"><MessageCircle size={15} />WhatsApp: {UNVERIFIED}</p>}{club.website && <a href={club.website} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm font-semibold text-stone-700 hover:text-[#F26419]"><ExternalLink size={15} className="text-[#F26419]" />Official website</a>}<a href={directions} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm font-semibold text-stone-700 hover:text-[#F26419]"><MapPin size={15} className="text-[#F26419]" />Get directions</a></div></section>
               <section className="border-l-2 border-[#F26419] bg-[#fff5ef] px-4 py-4"><div className="flex gap-3"><Info size={18} className="mt-0.5 shrink-0 text-[#F26419]" /><p className="text-xs leading-relaxed text-stone-600">This profile is designed for direct sharing and search discovery. Any commercial, technical, or ownership details marked unverified need confirmation from the club before Brisa promotes them as fact.</p></div><div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 pl-7">{club.sources.map((source) => <a key={source.href} href={source.href} target="_blank" rel="noreferrer" className="text-xs font-semibold text-[#c44b0c] hover:underline">{source.label} <ArrowUpRight size={12} className="inline" /></a>)}</div></section>
               <BackToClubsLink className="flex items-center justify-center gap-2 border border-stone-900 px-4 py-3 text-xs font-bold uppercase tracking-[0.12em] text-stone-900 transition-colors hover:border-[#F26419] hover:bg-[#F26419] hover:text-white"><ArrowLeft size={14} /> Browse all clubs</BackToClubsLink>
             </aside>

@@ -6,6 +6,11 @@ const API_ORIGIN =
   (process.env.NODE_ENV === "production"
     ? "http://brisa_server:8000"
     : "http://localhost:8000");
+const WEB_APP_ORIGIN =
+  process.env.WEB_APP_BASE_URL ??
+  (process.env.NODE_ENV === "production"
+    ? "https://app.brisapadel.com"
+    : "http://localhost:5173");
 
 const nextConfig: NextConfig = {
   output: "standalone",
@@ -43,6 +48,21 @@ const nextConfig: NextConfig = {
    */
   async redirects() {
     return [
+      {
+        destination: `${WEB_APP_ORIGIN}/account/:path*`,
+        permanent: false,
+        source: "/account/:path*"
+      },
+      {
+        destination: `${WEB_APP_ORIGIN}/login`,
+        permanent: false,
+        source: "/login"
+      },
+      {
+        destination: `${WEB_APP_ORIGIN}/request-access`,
+        permanent: false,
+        source: "/request-access"
+      },
       {
         destination: "https://app.brisapadel.com/client/:path*",
         permanent: false,
