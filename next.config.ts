@@ -1,0 +1,93 @@
+import type { NextConfig } from "next";
+
+/** Where the API lives when the portal is reached directly, bypassing nginx. */
+const API_ORIGIN =
+  process.env.CLUBS_API_BASE_URL ??
+  (process.env.NODE_ENV === "production"
+    ? "http://brisa_server:8000"
+    : "http://localhost:8000");
+const WEB_APP_ORIGIN =
+  process.env.WEB_APP_BASE_URL ??
+  (process.env.NODE_ENV === "production"
+    ? "https://app.brisapadel.com"
+    : "http://localhost:5173");
+
+const nextConfig: NextConfig = {
+  output: "standalone",
+  reactStrictMode: true,
+  poweredByHeader: false,
+
+  /**
+   * nginx sits in front of Next.js in production. Its page cache used to keep
+   * the rendered landing page for 24 hours, so a deployment could continue to
+   * serve obsolete asset URLs even though the new container was already live.
+   *
+   * X-Accel-Expires is understood by nginx's proxy cache. Keep this scoped to
+   * the two landing documents so versioned Next.js files and public images can
+   * still be cached normally.
+   */
+  async headers() {
+    const noPageCache = [
+      {
+        key: "Cache-Control",
+        value: "no-store, no-cache, must-revalidate, max-age=0"
+      },
+      { key: "X-Accel-Expires", value: "0" }
+    ];
+
+    return [
+      { source: "/", headers: noPageCache },
+      { source: "/es", headers: noPageCache }
+    ];
+  },
+
+  /**
+   * The marketing domain does not host the authenticated React application.
+   * Keep old/shared links working by sending them to the canonical app host
+   * instead of rendering the Next.js 404 page.
+   */
+  async redirects() {
+    return [
+      {
+        destination: `${WEB_APP_ORIGIN}/account/:path*`,
+        permanent: false,
+        source: "/account/:path*"
+      },
+      {
+        destination: `${WEB_APP_ORIGIN}/login`,
+        permanent: false,
+        source: "/login"
+      },
+      {
+        destination: `${WEB_APP_ORIGIN}/request-access`,
+        permanent: false,
+        source: "/request-access"
+      },
+      {
+        destination: "https://app.brisapadel.com/client/:path*",
+        permanent: false,
+        source: "/client/:path*"
+      }
+    ];
+  },
+
+  /**
+   * The browser always calls /api/clubs on its own origin, so nothing about the
+   * API's host is baked into the client bundle.
+   *
+   * Behind nginx this never runs: nginx matches ^/(api|auth)/ first and proxies
+   * straight to the API. It only takes effect when the portal is opened on its
+   * own port in development, where nginx is not in front of it.
+   */
+  async rewrites() {
+    return [
+      { source: "/api/clubs", destination: `${API_ORIGIN}/api/clubs` },
+      { source: "/api/clubs/:path*", destination: `${API_ORIGIN}/api/clubs/:path*` },
+      // Reviewing requires a signed-in member, so the sign-in step needs the
+      // same treatment as the club calls: same-origin here, nginx in front.
+      { source: "/api/auth/:path*", destination: `${API_ORIGIN}/api/auth/:path*` }
+    ];
+  }
+};
+
+export default nextConfig;
