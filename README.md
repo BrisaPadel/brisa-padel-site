@@ -50,7 +50,7 @@ canonicalise to them.
 | Variable | Default | Purpose |
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | `https://website.brisapadel.com` | Base for canonical, hreflang, OG and sitemap URLs |
-| `NEXT_PUBLIC_WEB_BASE_URL` | *(empty)* | Prefix for links into the React app (`/login`, `/request-access`) |
+| `NEXT_PUBLIC_WEB_BASE_URL` | `https://app.brisapadel.com` in production | Base URL for links into the React booking app |
 
 Both are inlined into the client bundle at build time — set them as Docker build
 args, not just at runtime.

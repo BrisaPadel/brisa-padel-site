@@ -54,6 +54,11 @@ const nextConfig: NextConfig = {
         source: "/account/:path*"
       },
       {
+        destination: `${WEB_APP_ORIGIN}/book/:path*`,
+        permanent: false,
+        source: "/book/:path*"
+      },
+      {
         destination: `${WEB_APP_ORIGIN}/login`,
         permanent: false,
         source: "/login"
