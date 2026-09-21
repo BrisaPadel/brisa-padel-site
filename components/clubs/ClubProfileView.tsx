@@ -81,9 +81,7 @@ export default function ClubProfileView({
 }) {
   const directions = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(club.address)}`;
   const bookingHref = club.bookingEnabled
-    ? webUrl(
-        `/account/book-court?clubId=${encodeURIComponent(club.id)}&source=club-profile`,
-      )
+    ? webUrl(`/book/${encodeURIComponent(club.slug)}`)
     : club.website || directions;
   const clubStandardScore = editorialPreviewScore ?? club.brisaClubStandardScore;
 
