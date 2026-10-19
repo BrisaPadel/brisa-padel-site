@@ -10,6 +10,7 @@
  */
 
 import BackToClubsLink from './BackToClubsLink';
+import ClubHeroImage from './ClubHeroImage';
 import ClubReviewsSection from './ClubReviewsSection';
 import ExpandableText from '@/components/ui/ExpandableText';
 import {
@@ -90,9 +91,12 @@ export default function ClubProfileView({
       <Navbar bookingHref={bookingHref} bookingExternal={!club.bookingEnabled} />
       <main className="pt-[72px]">
         {club.heroImageUrl && (
-          <div className="h-64 w-full overflow-hidden bg-stone-200 sm:h-80 lg:h-96">
-            <img src={club.heroImageUrl} alt={club.name} className="h-full w-full object-cover" />
-          </div>
+          <ClubHeroImage
+            alt={club.name}
+            className="h-64 w-full sm:h-80 lg:h-96"
+            loading="eager"
+            src={club.heroImageUrl}
+          />
         )}
         <section className="border-b border-stone-200 bg-[#fffdfb]">
           <div className="mx-auto max-w-[1280px] px-6 py-10 lg:px-10 lg:py-14">

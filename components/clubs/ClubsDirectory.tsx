@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { CLUBS_RETURN_KEY } from './BackToClubsLink';
 import ClubCardSkeleton from './ClubCardSkeleton';
+import ClubHeroImage from './ClubHeroImage';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import ClubFilterModal from './ClubFilterModal';
@@ -62,6 +63,13 @@ function ClubCard({ club }: { club: Club }) {
   return (
     <article className="group relative flex h-full flex-col overflow-visible border border-stone-200 bg-white shadow-[0_10px_35px_-25px_rgba(41,37,36,0.35)] transition-all duration-300 hover:z-20 hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_rgba(41,37,36,0.42)] focus-within:z-20">
       <div className="h-1.5 bg-gradient-to-r from-[#F26419] via-[#f99a62] to-[#f8efe8]" />
+      {club.heroImageUrl && (
+        <ClubHeroImage
+          alt={club.name}
+          className="aspect-[16/9] w-full"
+          src={club.heroImageUrl}
+        />
+      )}
       <div className="flex flex-1 flex-col p-6">
         <div className="flex h-[4.5rem] items-start justify-between gap-4">
           <div className="min-w-0 overflow-hidden">

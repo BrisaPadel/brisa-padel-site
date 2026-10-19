@@ -6,6 +6,7 @@ export default function ClubCardSkeleton() {
   return (
     <article className="flex h-full flex-col overflow-hidden border border-stone-200 bg-white" aria-hidden="true">
       <div className="h-1.5 bg-stone-200" />
+      <div className="aspect-[16/9] w-full animate-pulse bg-stone-100" />
       <div className="flex flex-1 animate-pulse flex-col p-6">
         <div className="flex min-h-[4.5rem] items-start justify-between gap-4">
           <div className="w-full">
