@@ -43,7 +43,7 @@ export default function ClubNotFound() {
               href="/"
               className="inline-flex w-full items-center justify-center gap-2 border border-stone-900 px-6 py-3.5 text-xs font-bold uppercase tracking-[0.12em] text-stone-900 transition-colors hover:border-[#F26419] hover:bg-[#F26419] hover:text-white sm:w-auto"
             >
-              <ArrowLeft size={14} /> Back to Brisa Padel
+              <ArrowLeft size={14} /> Back to Brisa
             </Link>
           </div>
         </div>

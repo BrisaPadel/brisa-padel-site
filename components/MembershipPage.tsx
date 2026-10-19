@@ -18,11 +18,11 @@ export default function MembershipPage({ lang }: Props) {
       <SubpageHeader lang={lang} basePath="/membership" />
       <main className={s}>
         <p className={`${styles.label} ${s}`}>{isEs ? 'Membresía' : 'Membership'}</p>
-        <h1 className={s}>{isEs ? 'Membresía Brisa Padel' : 'Brisa Padel Membership'}</h1>
+        <h1 className={s}>{isEs ? 'Membresía Brisa' : 'Brisa Membership'}</h1>
         <p className={`${styles.intro} ${s}`}>
           {isEs
-            ? 'Brisa Padel es una comunidad privada basada en aplicación. Tendrás acceso a matchmaking con IA y partidos semanales de 4 jugadores ajustados a tu nivel, horario y estilo.'
-            : 'Brisa Padel is a private, application-based community. Membership gives you access to AI-powered matchmaking and weekly four-player matches based on your skill, schedule, and playing style.'}
+            ? 'Brisa es una comunidad privada basada en aplicación. Tendrás acceso a matchmaking con IA y partidos semanales de 4 jugadores ajustados a tu nivel, horario y estilo.'
+            : 'Brisa is a private, application-based community. Membership gives you access to AI-powered matchmaking and weekly four-player matches based on your skill, schedule, and playing style.'}
         </p>
 
         <section className={s}>

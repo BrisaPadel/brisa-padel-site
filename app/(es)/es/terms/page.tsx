@@ -4,8 +4,8 @@ import { termsEs } from '@/data/legal';
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Términos | Brisa Padel',
-  description: 'Términos de servicio de Brisa Padel.',
+  title: 'Términos | Brisa',
+  description: 'Términos de servicio de Brisa.',
   lang: 'es',
   basePath: '/terms'
 });

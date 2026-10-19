@@ -62,7 +62,7 @@ export default function HomePage({ lang }: Props) {
       </div>
 
       <main className={`${styles['hero-content']} ${s}`}>
-        <div className={`${styles.wordmark} ${s}`} aria-label="Brisa Padel">
+        <div className={`${styles.wordmark} ${s}`} aria-label="Brisa">
           <span className={s}>|</span>
           <strong className={s}>{`${t.brand} `}<em className={s}>{t.brand2}</em></strong>
           <span className={s}>|</span>

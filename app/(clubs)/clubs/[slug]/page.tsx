@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 /** Console-authored metaTags win; anything left blank falls back to club data. */
 function seoFor(club: Club) {
   const meta = club.metaTags ?? {};
-  const title = meta.title?.trim() || `${club.name} | Miami Padel Club Guide | Brisa Padel`;
+  const title = meta.title?.trim() || `${club.name} | Brisa`;
   const description =
     meta.description?.trim() ||
     `${club.name} in ${club.neighborhood}: club hours, court environment, coaching, location, contact details, and transparent Brisa player-review information.`;
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const club = await getClub(slug);
 
   if (!club) {
-    return { title: 'Club not found | Brisa Padel', robots: { index: false, follow: false } };
+    return { title: 'Club not found | Brisa', robots: { index: false, follow: false } };
   }
 
   const { meta, title, description } = seoFor(club);

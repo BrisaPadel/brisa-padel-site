@@ -17,7 +17,7 @@ export default function AboutPage({ lang }: Props) {
       <SubpageHeader lang={lang} basePath="/about" />
       <main className={s}>
         <p className={`${styles.label} ${s}`}>{isEs ? 'Quiénes Somos' : 'About Us'}</p>
-        <h1 className={s}>{isEs ? 'Sobre Brisa Padel' : 'About Brisa Padel'}</h1>
+        <h1 className={s}>{isEs ? 'Sobre Brisa' : 'About Brisa'}</h1>
         <p className={`${styles.intro} ${s}`}>
           {isEs
             ? 'Brisa es una plataforma de matchmaking. Creamos partidos equilibrados cada semana sin coordinación manual.'

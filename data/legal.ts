@@ -1,7 +1,7 @@
 export const termsEn = [
   {
     title: "1. Agreement to Terms",
-    body: `These Terms of Service ("Terms") constitute a legally binding agreement between you ("User," "Member," or "you") and Kapur Capital LLC, a Florida limited liability company doing business as Brisa Padel ("Brisa Padel," "we," "us," or "our"), governing your access to and use of the Brisa Padel website, mobile platform, matchmaking services, WhatsApp communications, and any related services (collectively, the "Services").
+    body: `These Terms of Service ("Terms") constitute a legally binding agreement between you ("User," "Member," or "you") and Kapur Capital LLC, a Florida limited liability company doing business as Brisa ("Brisa," "we," "us," or "our"), governing your access to and use of the Brisa website, mobile platform, matchmaking services, WhatsApp communications, and any related services (collectively, the "Services").
 
 By submitting a membership application, creating an account, or otherwise using the Services, you acknowledge that you have read, understood, and agree to be bound by these Terms and our Privacy Policy, which is incorporated herein by reference. If you do not agree to these Terms, you must not use the Services.
 
@@ -9,19 +9,19 @@ We reserve the right to amend these Terms at any time. Material changes will be 
   },
   {
     title: "2. Eligibility",
-    body: `The Services are intended for individuals who are at least 18 years of age. By using the Services, you represent and warrant that you are 18 years of age or older and have the legal capacity to enter into a binding agreement. Membership is granted at the sole discretion of Brisa Padel and may be denied, suspended, or revoked at any time without cause.`,
+    body: `The Services are intended for individuals who are at least 18 years of age. By using the Services, you represent and warrant that you are 18 years of age or older and have the legal capacity to enter into a binding agreement. Membership is granted at the sole discretion of Brisa and may be denied, suspended, or revoked at any time without cause.`,
   },
   {
     title: "3. Membership & Access",
-    body: `Membership at Brisa Padel is by application only. Submission of an application does not guarantee acceptance. Upon approval, members receive access to the matchmaking platform, weekly match suggestions, and community features.
+    body: `Membership at Brisa is by application only. Submission of an application does not guarantee acceptance. Upon approval, members receive access to the matchmaking platform, weekly match suggestions, and community features.
 
-Membership is personal and non-transferable. Members are responsible for maintaining the confidentiality of their account credentials. You agree to notify us immediately of any unauthorized use of your account. Brisa Padel is not liable for any loss resulting from unauthorized use of your account.
+Membership is personal and non-transferable. Members are responsible for maintaining the confidentiality of their account credentials. You agree to notify us immediately of any unauthorized use of your account. Brisa is not liable for any loss resulting from unauthorized use of your account.
 
-We reserve the right to suspend or permanently terminate any membership that violates these Terms, engages in abusive or unsportsmanlike conduct, or is otherwise deemed detrimental to the Brisa Padel community.`,
+We reserve the right to suspend or permanently terminate any membership that violates these Terms, engages in abusive or unsportsmanlike conduct, or is otherwise deemed detrimental to the Brisa community.`,
   },
   {
     title: "4. WhatsApp Communications & TCPA Consent",
-    body: `By submitting a membership application and checking the consent box, you expressly consent to receive automated and manually initiated messages from Brisa Padel via WhatsApp at the phone number you provide. These messages may include, but are not limited to: weekly match suggestions, availability prompts, post-match rating requests, community updates, administrative notices, and service announcements.
+    body: `By submitting a membership application and checking the consent box, you expressly consent to receive automated and manually initiated messages from Brisa via WhatsApp at the phone number you provide. These messages may include, but are not limited to: weekly match suggestions, availability prompts, post-match rating requests, community updates, administrative notices, and service announcements.
 
 Message frequency will vary based on your activity and weekly match cycles. Standard messaging rates from your mobile carrier may apply. You may opt out of WhatsApp communications at any time by replying STOP to any message or by contacting us at legal@brisapadel.com. Note that opting out of communications may limit or terminate your access to the matchmaking Services.
 
@@ -29,45 +29,45 @@ By consenting, you acknowledge that your consent is not a condition of purchasin
   },
   {
     title: "5. Matchmaking Services",
-    body: `Brisa Padel provides an AI-assisted padel matchmaking platform designed to suggest compatible match pairings based on player data including skill level, availability, preferred clubs, play style, and post-match ratings ("Matchmaking Services").
+    body: `Brisa provides an AI-assisted padel matchmaking platform designed to suggest compatible match pairings based on player data including skill level, availability, preferred clubs, play style, and post-match ratings ("Matchmaking Services").
 
-Match suggestions are generated algorithmically and reviewed by Brisa Padel administrators before being sent to members. Brisa Padel does not guarantee the quality, outcome, or safety of any match arranged through the platform. Participation in any match is entirely voluntary and at your own risk.
+Match suggestions are generated algorithmically and reviewed by Brisa administrators before being sent to members. Brisa does not guarantee the quality, outcome, or safety of any match arranged through the platform. Participation in any match is entirely voluntary and at your own risk.
 
-Brisa Padel is not responsible for the conduct of any member during or after a match, for court conditions at any third-party venue, or for any disputes arising between members. Members are solely responsible for confirming court bookings, fees, and logistics with the relevant club or facility.`,
+Brisa is not responsible for the conduct of any member during or after a match, for court conditions at any third-party venue, or for any disputes arising between members. Members are solely responsible for confirming court bookings, fees, and logistics with the relevant club or facility.`,
   },
   {
     title: "6. Player Ratings & Data",
-    body: `By participating in the Services, you agree that Brisa Padel may collect, store, and process data related to your match history, post-match ratings submitted by you and other members, availability patterns, and engagement with the platform. This data is used to improve matchmaking accuracy and personalize your experience.
+    body: `By participating in the Services, you agree that Brisa may collect, store, and process data related to your match history, post-match ratings submitted by you and other members, availability patterns, and engagement with the platform. This data is used to improve matchmaking accuracy and personalize your experience.
 
-Post-match ratings are confidential and are used solely for internal algorithmic purposes. Individual ratings submitted about you by other members will not be shared with you in identifiable form. Brisa Padel reserves the right to use aggregated, anonymized data for product development, research, and marketing purposes.`,
+Post-match ratings are confidential and are used solely for internal algorithmic purposes. Individual ratings submitted about you by other members will not be shared with you in identifiable form. Brisa reserves the right to use aggregated, anonymized data for product development, research, and marketing purposes.`,
   },
   {
     title: "7. Code of Conduct",
     body: `All members are expected to conduct themselves with respect, sportsmanship, and integrity at all times — both on and off the court and in all communications through the platform. The following conduct is strictly prohibited:
 
-Harassment, discrimination, or abusive language directed at any member, staff, or third party; intentional damage to club property or equipment; misrepresentation of skill level or identity; sharing another member's personal information without their consent; use of the platform for any commercial solicitation not authorized by Brisa Padel.
+Harassment, discrimination, or abusive language directed at any member, staff, or third party; intentional damage to club property or equipment; misrepresentation of skill level or identity; sharing another member's personal information without their consent; use of the platform for any commercial solicitation not authorized by Brisa.
 
-Violations of this code may result in immediate suspension or permanent termination of membership without refund. Brisa Padel reserves the right to determine, in its sole discretion, what constitutes a violation.`,
+Violations of this code may result in immediate suspension or permanent termination of membership without refund. Brisa reserves the right to determine, in its sole discretion, what constitutes a violation.`,
   },
   {
     title: "8. Fees & Payments",
-    body: `Any membership fees, court booking fees, or service charges are due at the time of purchase and are non-refundable except as required by applicable law. Brisa Padel reserves the right to modify its fee structure with at least 30 days' written notice to active members.
+    body: `Any membership fees, court booking fees, or service charges are due at the time of purchase and are non-refundable except as required by applicable law. Brisa reserves the right to modify its fee structure with at least 30 days' written notice to active members.
 
-Brisa Padel does not directly book or charge for court time at third-party venues. Any court fees are the sole responsibility of the member and are subject to the terms of the relevant club or facility.`,
+Brisa does not directly book or charge for court time at third-party venues. Any court fees are the sole responsibility of the member and are subject to the terms of the relevant club or facility.`,
   },
   {
     title: "9. Health, Safety & Assumption of Risk",
     body: `Participation in padel and any physical activity arranged through the Services involves inherent risks of physical injury. By using the Services, you voluntarily assume all risks associated with participation in padel matches, clinics, or lessons arranged through the platform.
 
-Brisa Padel strongly recommends that all members consult a licensed physician before engaging in physical activity, particularly if they have any pre-existing medical conditions. Appropriate athletic footwear and protective eyewear are recommended at all times during play.
+Brisa strongly recommends that all members consult a licensed physician before engaging in physical activity, particularly if they have any pre-existing medical conditions. Appropriate athletic footwear and protective eyewear are recommended at all times during play.
 
-Brisa Padel is not liable for any personal injury, illness, or death sustained in connection with participation in any match or activity arranged through the Services.`,
+Brisa is not liable for any personal injury, illness, or death sustained in connection with participation in any match or activity arranged through the Services.`,
   },
   {
     title: "10. Limitation of Liability",
     body: `To the fullest extent permitted by applicable law, Kapur Capital LLC, its members, managers, employees, agents, and affiliates shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data, goodwill, or personal injury, arising out of or in connection with your use of the Services, even if advised of the possibility of such damages.
 
-Our total aggregate liability to you for any claims arising under these Terms shall not exceed the greater of (a) the total fees paid by you to Brisa Padel in the twelve months preceding the claim, or (b) one hundred U.S. dollars ($100.00).
+Our total aggregate liability to you for any claims arising under these Terms shall not exceed the greater of (a) the total fees paid by you to Brisa in the twelve months preceding the claim, or (b) one hundred U.S. dollars ($100.00).
 
 Some jurisdictions do not allow the exclusion or limitation of certain damages, so the above limitations may not apply to you.`,
   },
@@ -93,7 +93,7 @@ Notwithstanding the foregoing, either party may seek injunctive or other equitab
   },
   {
     title: "15. Termination",
-    body: `Brisa Padel may suspend or terminate your access to the Services at any time, with or without cause, and with or without notice. Upon termination, your right to use the Services will immediately cease. Provisions of these Terms that by their nature should survive termination shall survive, including but not limited to Sections 6, 10, 11, 13, and 14.`,
+    body: `Brisa may suspend or terminate your access to the Services at any time, with or without cause, and with or without notice. Upon termination, your right to use the Services will immediately cease. Provisions of these Terms that by their nature should survive termination shall survive, including but not limited to Sections 6, 10, 11, 13, and 14.`,
   },
   {
     title: "16. Miscellaneous",
@@ -101,13 +101,13 @@ Notwithstanding the foregoing, either party may seek injunctive or other equitab
   },
   {
     title: "17. Contact",
-    body: `For questions regarding these Terms of Service, please contact Kapur Capital LLC at:\n\nEmail: legal@brisapadel.com\nOperating as: Brisa Padel\nState of incorporation: Florida, United States`,
+    body: `For questions regarding these Terms of Service, please contact Kapur Capital LLC at:\n\nEmail: legal@brisapadel.com\nOperating as: Brisa\nState of incorporation: Florida, United States`,
   },
 ];
 export const termsEs = [
   {
     title: "1. Aceptación de los Términos",
-    body: `Estos Términos de Servicio ("Términos") constituyen un acuerdo legalmente vinculante entre usted ("Usuario," "Miembro" o "usted") y Kapur Capital LLC, una compañía de responsabilidad limitada de Florida que opera bajo el nombre comercial Brisa Padel ("Brisa Padel," "nosotros," "nos" o "nuestro"), que rige su acceso y uso del sitio web de Brisa Padel, la plataforma móvil, los servicios de emparejamiento, las comunicaciones de WhatsApp y cualquier servicio relacionado (colectivamente, los "Servicios").
+    body: `Estos Términos de Servicio ("Términos") constituyen un acuerdo legalmente vinculante entre usted ("Usuario," "Miembro" o "usted") y Kapur Capital LLC, una compañía de responsabilidad limitada de Florida que opera bajo el nombre comercial Brisa ("Brisa," "nosotros," "nos" o "nuestro"), que rige su acceso y uso del sitio web de Brisa, la plataforma móvil, los servicios de emparejamiento, las comunicaciones de WhatsApp y cualquier servicio relacionado (colectivamente, los "Servicios").
 
 Al enviar una solicitud de membresía, crear una cuenta o utilizar los Servicios de cualquier otra manera, usted reconoce que ha leído, comprendido y acepta estar sujeto a estos Términos y a nuestra Política de Privacidad, que se incorpora aquí por referencia. Si no está de acuerdo con estos Términos, no debe utilizar los Servicios.
 
@@ -115,19 +115,19 @@ Nos reservamos el derecho de modificar estos Términos en cualquier momento. Los
   },
   {
     title: "2. Elegibilidad",
-    body: `Los Servicios están destinados a personas mayores de 18 años. Al utilizar los Servicios, usted declara y garantiza que tiene 18 años o más y tiene la capacidad legal para celebrar un acuerdo vinculante. La membresía se otorga a discreción exclusiva de Brisa Padel y puede ser denegada, suspendida o revocada en cualquier momento sin causa.`,
+    body: `Los Servicios están destinados a personas mayores de 18 años. Al utilizar los Servicios, usted declara y garantiza que tiene 18 años o más y tiene la capacidad legal para celebrar un acuerdo vinculante. La membresía se otorga a discreción exclusiva de Brisa y puede ser denegada, suspendida o revocada en cualquier momento sin causa.`,
   },
   {
     title: "3. Membresía y Acceso",
-    body: `La membresía en Brisa Padel es solo por solicitud. El envío de una solicitud no garantiza la aceptación. Una vez aprobados, los miembros obtienen acceso a la plataforma de emparejamiento, sugerencias de partidos semanales y funciones comunitarias.
+    body: `La membresía en Brisa es solo por solicitud. El envío de una solicitud no garantiza la aceptación. Una vez aprobados, los miembros obtienen acceso a la plataforma de emparejamiento, sugerencias de partidos semanales y funciones comunitarias.
 
-La membresía es personal e intransferible. Los miembros son responsables de mantener la confidencialidad de las credenciales de su cuenta. Usted acepta notificarnos de inmediato sobre cualquier uso no autorizado de su cuenta. Brisa Padel no es responsable de ninguna pérdida resultante del uso no autorizado de su cuenta.
+La membresía es personal e intransferible. Los miembros son responsables de mantener la confidencialidad de las credenciales de su cuenta. Usted acepta notificarnos de inmediato sobre cualquier uso no autorizado de su cuenta. Brisa no es responsable de ninguna pérdida resultante del uso no autorizado de su cuenta.
 
-Nos reservamos el derecho de suspender o cancelar permanentemente cualquier membresía que viole estos Términos, tenga conducta abusiva o antideportiva, o sea considerada perjudicial para la comunidad de Brisa Padel.`,
+Nos reservamos el derecho de suspender o cancelar permanentemente cualquier membresía que viole estos Términos, tenga conducta abusiva o antideportiva, o sea considerada perjudicial para la comunidad de Brisa.`,
   },
   {
     title: "4. Comunicaciones de WhatsApp y Consentimiento TCPA",
-    body: `Al enviar una solicitud de membresía y marcar la casilla de consentimiento, usted acepta expresamente recibir mensajes automatizados e iniciados manualmente de Brisa Padel a través de WhatsApp al número de teléfono que proporcione. Estos mensajes pueden incluir, entre otros: sugerencias de partidos semanales, solicitudes de disponibilidad, solicitudes de calificación post-partido, actualizaciones de la comunidad, avisos administrativos y anuncios de servicio.
+    body: `Al enviar una solicitud de membresía y marcar la casilla de consentimiento, usted acepta expresamente recibir mensajes automatizados e iniciados manualmente de Brisa a través de WhatsApp al número de teléfono que proporcione. Estos mensajes pueden incluir, entre otros: sugerencias de partidos semanales, solicitudes de disponibilidad, solicitudes de calificación post-partido, actualizaciones de la comunidad, avisos administrativos y anuncios de servicio.
 
 La frecuencia de los mensajes variará según su actividad y los ciclos de partidos semanales. Pueden aplicarse tarifas estándar de mensajería de su operador móvil. Puede optar por no recibir comunicaciones de WhatsApp en cualquier momento respondiendo STOP a cualquier mensaje o contactándonos en legal@brisapadel.com. Tenga en cuenta que optar por no recibir comunicaciones puede limitar o terminar su acceso a los Servicios de emparejamiento.
 
@@ -135,15 +135,15 @@ Al dar su consentimiento, usted reconoce que su consentimiento no es una condici
   },
   {
     title: "5. Servicios de Emparejamiento",
-    body: `Brisa Padel proporciona una plataforma de emparejamiento de pádel asistida por IA diseñada para sugerir emparejamientos compatibles basados en datos del jugador, incluyendo nivel de habilidad, disponibilidad, clubes preferidos, estilo de juego y calificaciones post-partido ("Servicios de Emparejamiento").
+    body: `Brisa proporciona una plataforma de emparejamiento de pádel asistida por IA diseñada para sugerir emparejamientos compatibles basados en datos del jugador, incluyendo nivel de habilidad, disponibilidad, clubes preferidos, estilo de juego y calificaciones post-partido ("Servicios de Emparejamiento").
 
-Las sugerencias de partidos se generan algorítmicamente y son revisadas por los administradores de Brisa Padel antes de ser enviadas a los miembros. Brisa Padel no garantiza la calidad, el resultado ni la seguridad de ningún partido organizado a través de la plataforma. La participación en cualquier partido es completamente voluntaria y bajo su propio riesgo.
+Las sugerencias de partidos se generan algorítmicamente y son revisadas por los administradores de Brisa antes de ser enviadas a los miembros. Brisa no garantiza la calidad, el resultado ni la seguridad de ningún partido organizado a través de la plataforma. La participación en cualquier partido es completamente voluntaria y bajo su propio riesgo.
 
-Brisa Padel no es responsable de la conducta de ningún miembro durante o después de un partido, de las condiciones de la cancha en ningún lugar de terceros, ni de ninguna disputa que surja entre miembros.`,
+Brisa no es responsable de la conducta de ningún miembro durante o después de un partido, de las condiciones de la cancha en ningún lugar de terceros, ni de ninguna disputa que surja entre miembros.`,
   },
   {
     title: "6. Calificaciones y Datos de Jugadores",
-    body: `Al participar en los Servicios, usted acepta que Brisa Padel puede recopilar, almacenar y procesar datos relacionados con su historial de partidos, calificaciones post-partido enviadas por usted y otros miembros, patrones de disponibilidad y participación en la plataforma. Estos datos se utilizan para mejorar la precisión del emparejamiento y personalizar su experiencia.
+    body: `Al participar en los Servicios, usted acepta que Brisa puede recopilar, almacenar y procesar datos relacionados con su historial de partidos, calificaciones post-partido enviadas por usted y otros miembros, patrones de disponibilidad y participación en la plataforma. Estos datos se utilizan para mejorar la precisión del emparejamiento y personalizar su experiencia.
 
 Las calificaciones post-partido son confidenciales y se utilizan únicamente para fines algorítmicos internos. Las calificaciones individuales enviadas sobre usted por otros miembros no se compartirán con usted de forma identificable.`,
   },
@@ -155,19 +155,19 @@ Las violaciones pueden resultar en la suspensión inmediata o cancelación perma
   },
   {
     title: "8. Tarifas y Pagos",
-    body: `Cualquier tarifa de membresía, reserva de cancha o cargo de servicio vence en el momento de la compra y no es reembolsable, excepto según lo requiera la ley aplicable. Brisa Padel se reserva el derecho de modificar su estructura de tarifas con al menos 30 días de aviso por escrito a los miembros activos. Brisa Padel no reserva ni cobra directamente el tiempo de cancha en lugares de terceros.`,
+    body: `Cualquier tarifa de membresía, reserva de cancha o cargo de servicio vence en el momento de la compra y no es reembolsable, excepto según lo requiera la ley aplicable. Brisa se reserva el derecho de modificar su estructura de tarifas con al menos 30 días de aviso por escrito a los miembros activos. Brisa no reserva ni cobra directamente el tiempo de cancha en lugares de terceros.`,
   },
   {
     title: "9. Salud, Seguridad y Asunción de Riesgo",
     body: `La participación en el pádel y cualquier actividad física organizada a través de los Servicios implica riesgos inherentes de lesiones físicas. Al utilizar los Servicios, usted asume voluntariamente todos los riesgos asociados con la participación en partidos, clínicas o lecciones de pádel organizadas a través de la plataforma.
 
-Brisa Padel recomienda encarecidamente que todos los miembros consulten a un médico con licencia antes de realizar actividad física. Brisa Padel no es responsable de ninguna lesión personal, enfermedad o muerte sufrida en relación con la participación en cualquier partido o actividad organizada a través de los Servicios.`,
+Brisa recomienda encarecidamente que todos los miembros consulten a un médico con licencia antes de realizar actividad física. Brisa no es responsable de ninguna lesión personal, enfermedad o muerte sufrida en relación con la participación en cualquier partido o actividad organizada a través de los Servicios.`,
   },
   {
     title: "10. Limitación de Responsabilidad",
     body: `En la máxima medida permitida por la ley aplicable, Kapur Capital LLC, sus miembros, gerentes, empleados, agentes y afiliados no serán responsables de ningún daño indirecto, incidental, especial, consecuente o punitivo que surja de o en conexión con su uso de los Servicios.
 
-Nuestra responsabilidad total agregada hacia usted por cualquier reclamación que surja bajo estos Términos no excederá el mayor de (a) las tarifas totales pagadas por usted a Brisa Padel en los doce meses anteriores a la reclamación, o (b) cien dólares estadounidenses ($100.00).`,
+Nuestra responsabilidad total agregada hacia usted por cualquier reclamación que surja bajo estos Términos no excederá el mayor de (a) las tarifas totales pagadas por usted a Brisa en los doce meses anteriores a la reclamación, o (b) cien dólares estadounidenses ($100.00).`,
   },
   {
     title: "11. Indemnización",
@@ -189,7 +189,7 @@ Usted renuncia a cualquier derecho de participar en una demanda colectiva o arbi
   },
   {
     title: "15. Terminación",
-    body: `Brisa Padel puede suspender o terminar su acceso a los Servicios en cualquier momento, con o sin causa, y con o sin previo aviso. Las disposiciones de estos Términos que por su naturaleza deban sobrevivir a la terminación sobrevivirán, incluyendo las Secciones 6, 10, 11, 13 y 14.`,
+    body: `Brisa puede suspender o terminar su acceso a los Servicios en cualquier momento, con o sin causa, y con o sin previo aviso. Las disposiciones de estos Términos que por su naturaleza deban sobrevivir a la terminación sobrevivirán, incluyendo las Secciones 6, 10, 11, 13 y 14.`,
   },
   {
     title: "16. Disposiciones Generales",
@@ -197,13 +197,13 @@ Usted renuncia a cualquier derecho de participar en una demanda colectiva o arbi
   },
   {
     title: "17. Contacto",
-    body: `Para preguntas sobre estos Términos de Servicio, comuníquese con Kapur Capital LLC en:\n\nCorreo electrónico: legal@brisapadel.com\nNombre comercial: Brisa Padel\nEstado de constitución: Florida, Estados Unidos`,
+    body: `Para preguntas sobre estos Términos de Servicio, comuníquese con Kapur Capital LLC en:\n\nCorreo electrónico: legal@brisapadel.com\nNombre comercial: Brisa\nEstado de constitución: Florida, Estados Unidos`,
   },
 ];
 export const privacyEn = [
   {
     title: "1. Introduction",
-    body: `Kapur Capital LLC, a Florida limited liability company doing business as Brisa Padel ("Brisa Padel," "we," "us," or "our"), is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your personal information when you use our website, mobile platform, matchmaking services, WhatsApp communications, and any related services (collectively, the "Services").
+    body: `Kapur Capital LLC, a Florida limited liability company doing business as Brisa ("Brisa," "we," "us," or "our"), is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your personal information when you use our website, mobile platform, matchmaking services, WhatsApp communications, and any related services (collectively, the "Services").
 
 By submitting a membership application, creating an account, or otherwise using the Services, you consent to the practices described in this Privacy Policy. If you do not agree with this policy, please do not use the Services.
 
@@ -243,7 +243,7 @@ Safety & Security: To detect, investigate, and prevent fraudulent activity, abus
   },
   {
     title: "4. WhatsApp Communications & TCPA",
-    body: `By consenting during the membership application process, you authorize Brisa Padel to contact you via WhatsApp at the phone number you provide. WhatsApp messages may be automated or manually initiated and may include match suggestions, availability check-ins, post-match rating requests, and service announcements.
+    body: `By consenting during the membership application process, you authorize Brisa to contact you via WhatsApp at the phone number you provide. WhatsApp messages may be automated or manually initiated and may include match suggestions, availability check-ins, post-match rating requests, and service announcements.
 
 We do not sell or share your phone number with third parties for their own marketing purposes. Your WhatsApp number is used solely to facilitate the Services described in these policies.
 
@@ -253,7 +253,7 @@ We comply with the Telephone Consumer Protection Act (TCPA) and applicable Flori
   },
   {
     title: "5. Matchmaking Data & Ratings",
-    body: `Your match history, post-match ratings, and dynamic performance scores (WPR and networking scores) are used exclusively to improve the quality and accuracy of match suggestions. This data is processed algorithmically and reviewed by Brisa Padel administrators.
+    body: `Your match history, post-match ratings, and dynamic performance scores (WPR and networking scores) are used exclusively to improve the quality and accuracy of match suggestions. This data is processed algorithmically and reviewed by Brisa administrators.
 
 Post-match ratings submitted by other members about your performance are treated as confidential and will not be disclosed to you in individually identifiable form. Aggregated or anonymized rating data may be used for internal analytics and product development.
 
@@ -263,11 +263,11 @@ Availability data you provide — whether through the Account page, the membersh
     title: "6. Sharing of Personal Information",
     body: `We do not sell, rent, or trade your personal information to third parties. We may share your information in the following limited circumstances:
 
-With Other Members: Your first name, profile photograph, skill level, and preferred playing side may be visible to other Brisa Padel members in the context of match suggestions. Your contact details, ratings, and administrative scores are never shared with other members.
+With Other Members: Your first name, profile photograph, skill level, and preferred playing side may be visible to other Brisa members in the context of match suggestions. Your contact details, ratings, and administrative scores are never shared with other members.
 
 With Service Providers: We may share information with trusted third-party vendors who assist us in operating the Services (e.g., cloud hosting, analytics, email delivery). These vendors are contractually obligated to protect your information and may only use it to perform services on our behalf.
 
-For Legal Reasons: We may disclose your information if required by law, court order, or governmental authority, or if we believe disclosure is necessary to protect the rights, property, or safety of Brisa Padel, our members, or the public.
+For Legal Reasons: We may disclose your information if required by law, court order, or governmental authority, or if we believe disclosure is necessary to protect the rights, property, or safety of Brisa, our members, or the public.
 
 Business Transfers: In the event of a merger, acquisition, or sale of all or substantially all of our assets, your information may be transferred as part of that transaction. We will notify you via email or WhatsApp before your information becomes subject to a different privacy policy.`,
   },
@@ -313,7 +313,7 @@ To exercise any of these rights, please contact us at privacy@brisapadel.com. We
   },
   {
     title: "12. Third-Party Links & Services",
-    body: `The Services may contain links to third-party websites, club booking platforms, or social media profiles. We are not responsible for the privacy practices or content of those third parties. We encourage you to review the privacy policies of any third-party services you access through the platform. This Privacy Policy applies solely to information collected by Brisa Padel.`,
+    body: `The Services may contain links to third-party websites, club booking platforms, or social media profiles. We are not responsible for the privacy practices or content of those third parties. We encourage you to review the privacy policies of any third-party services you access through the platform. This Privacy Policy applies solely to information collected by Brisa.`,
   },
   {
     title: "13. Florida Privacy Rights",
@@ -325,13 +325,13 @@ To exercise any of these rights, please contact us at privacy@brisapadel.com. We
   },
   {
     title: "15. Contact Us",
-    body: `If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact our privacy team at:\n\nEmail: privacy@brisapadel.com\nOperating as: Brisa Padel\nOperator: Kapur Capital LLC\nState of incorporation: Florida, United States\n\nWe will respond to all inquiries within 30 days.`,
+    body: `If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact our privacy team at:\n\nEmail: privacy@brisapadel.com\nOperating as: Brisa\nOperator: Kapur Capital LLC\nState of incorporation: Florida, United States\n\nWe will respond to all inquiries within 30 days.`,
   },
 ];
 export const privacyEs = [
   {
     title: "1. Introducción",
-    body: `Kapur Capital LLC, una compañía de responsabilidad limitada de Florida que opera bajo el nombre comercial Brisa Padel ("Brisa Padel," "nosotros," "nos" o "nuestro"), está comprometida con la protección de su privacidad. Esta Política de Privacidad explica cómo recopilamos, usamos, divulgamos y protegemos su información personal cuando utiliza nuestros Servicios.
+    body: `Kapur Capital LLC, una compañía de responsabilidad limitada de Florida que opera bajo el nombre comercial Brisa ("Brisa," "nosotros," "nos" o "nuestro"), está comprometida con la protección de su privacidad. Esta Política de Privacidad explica cómo recopilamos, usamos, divulgamos y protegemos su información personal cuando utiliza nuestros Servicios.
 
 Al enviar una solicitud de membresía, crear una cuenta o utilizar los Servicios de cualquier otra manera, usted consiente las prácticas descritas en esta Política de Privacidad.`,
   },
@@ -345,7 +345,7 @@ Al enviar una solicitud de membresía, crear una cuenta o utilizar los Servicios
   },
   {
     title: "4. Comunicaciones de WhatsApp y TCPA",
-    body: `Al dar su consentimiento durante el proceso de solicitud de membresía, usted autoriza a Brisa Padel a contactarle vía WhatsApp al número de teléfono que proporcione. No vendemos ni compartimos su número de teléfono con terceros para sus propios fines de marketing. Puede optar por no recibir comunicaciones de WhatsApp en cualquier momento respondiendo STOP a cualquier mensaje o contactándonos en legal@brisapadel.com. Cumplimos con la Ley de Protección al Consumidor Telefónico (TCPA) y la ley de telecomunicaciones de Florida aplicable.`,
+    body: `Al dar su consentimiento durante el proceso de solicitud de membresía, usted autoriza a Brisa a contactarle vía WhatsApp al número de teléfono que proporcione. No vendemos ni compartimos su número de teléfono con terceros para sus propios fines de marketing. Puede optar por no recibir comunicaciones de WhatsApp en cualquier momento respondiendo STOP a cualquier mensaje o contactándonos en legal@brisapadel.com. Cumplimos con la Ley de Protección al Consumidor Telefónico (TCPA) y la ley de telecomunicaciones de Florida aplicable.`,
   },
   {
     title: "5. Datos de Emparejamiento y Calificaciones",
@@ -377,7 +377,7 @@ Al enviar una solicitud de membresía, crear una cuenta o utilizar los Servicios
   },
   {
     title: "12. Enlaces y Servicios de Terceros",
-    body: `Los Servicios pueden contener enlaces a sitios web de terceros o plataformas de reserva de clubes. No somos responsables de las prácticas de privacidad de esos terceros. Esta Política de Privacidad se aplica únicamente a la información recopilada por Brisa Padel.`,
+    body: `Los Servicios pueden contener enlaces a sitios web de terceros o plataformas de reserva de clubes. No somos responsables de las prácticas de privacidad de esos terceros. Esta Política de Privacidad se aplica únicamente a la información recopilada por Brisa.`,
   },
   {
     title: "13. Derechos de Privacidad de Florida",
@@ -389,6 +389,6 @@ Al enviar una solicitud de membresía, crear una cuenta o utilizar los Servicios
   },
   {
     title: "15. Contáctenos",
-    body: `Si tiene preguntas, inquietudes o solicitudes sobre esta Política de Privacidad o nuestras prácticas de datos, comuníquese con nuestro equipo de privacidad en:\n\nCorreo electrónico: privacy@brisapadel.com\nNombre comercial: Brisa Padel\nOperador: Kapur Capital LLC\nEstado de constitución: Florida, Estados Unidos`,
+    body: `Si tiene preguntas, inquietudes o solicitudes sobre esta Política de Privacidad o nuestras prácticas de datos, comuníquese con nuestro equipo de privacidad en:\n\nCorreo electrónico: privacy@brisapadel.com\nNombre comercial: Brisa\nOperador: Kapur Capital LLC\nEstado de constitución: Florida, Estados Unidos`,
   },
 ];

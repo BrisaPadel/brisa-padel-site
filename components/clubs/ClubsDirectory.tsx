@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * BRISA PADEL — Club Intelligence Directory (/clubs)
+ * Brisa — Club Intelligence Directory (/clubs)
  * Ported from the prototype's Clubs.tsx. Markup and classes are unchanged; the
  * club list now arrives from the API as a prop instead of a static constant,
  * and the review UI is omitted until reviews are wired to the backend.

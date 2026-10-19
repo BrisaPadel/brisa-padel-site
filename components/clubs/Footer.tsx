@@ -1,5 +1,5 @@
 /*
- * BRISA PADEL — Footer Component
+ * Brisa — Footer Component
  * Design: Dark charcoal background, warm white text, orange accents
  * Four-column layout: brand, navigation, contact, social
  */
@@ -92,7 +92,7 @@ export default function Footer({ variant = "detailed" }: FooterProps) {
       <div className="border-t border-stone-800">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-10 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-stone-600 text-xs tracking-wide">
-            © {new Date().getFullYear()} Brisa Padel. All rights reserved.
+            © {new Date().getFullYear()} Brisa. All rights reserved.
           </p>
           <div className="flex items-center gap-5">
             <Link href="/terms" className="text-stone-600 text-xs hover:text-[#F26419] transition-colors">

@@ -2,7 +2,7 @@ export type Lang = 'en' | 'es';
 
 export const translations = {
   en: {
-    pageTitle: 'Brisa Padel | Padel Scheduling Made Easy',
+    pageTitle: 'Brisa | Padel Scheduling Made Easy',
     pageDescription: "Miami's premier padel match-making app.",
     brand: 'Brisa',
     brand2: 'Padel',
@@ -15,10 +15,10 @@ export const translations = {
     homePrivacy: 'Privacy',
     login: 'Log In',
     language: 'Language',
-    altHero: 'Brisa Padel court at golden hour'
+    altHero: 'Brisa court at golden hour'
   },
   es: {
-    pageTitle: 'Brisa Padel | Organiza tu Pádel Fácilmente',
+    pageTitle: 'Brisa | Organiza tu Pádel Fácilmente',
     pageDescription: 'La app de emparejamiento de pádel premium de Miami.',
     brand: 'Brisa',
     brand2: 'Padel',
@@ -31,7 +31,7 @@ export const translations = {
     homePrivacy: 'Privacidad',
     login: 'Iniciar Sesión',
     language: 'Idioma',
-    altHero: 'Cancha de Brisa Padel al atardecer'
+    altHero: 'Cancha de Brisa al atardecer'
   }
 } as const;
 

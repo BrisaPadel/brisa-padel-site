@@ -3,8 +3,8 @@ import AboutPage from '@/components/AboutPage';
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Nosotros | Brisa Padel',
-  description: 'Sobre Brisa Padel y nuestra plataforma privada de matchmaking.',
+  title: 'Nosotros | Brisa',
+  description: 'Sobre Brisa y nuestra plataforma privada de matchmaking.',
   lang: 'es',
   basePath: '/about'
 });

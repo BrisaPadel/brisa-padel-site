@@ -1,5 +1,5 @@
 /*
- * BRISA PADEL — Navbar Component
+ * Brisa — Navbar Component
  * Design: Fixed top bar, white background, left-aligned wordmark, one focused
  * booking action. The Brisa public experience now uses intentional minimalism:
  * no competing section tabs in the header, and club profiles may send the CTA

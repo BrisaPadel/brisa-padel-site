@@ -1,5 +1,5 @@
 /**
- * BRISA PADEL — Indexable Club Profile (/clubs/:slug)
+ * Brisa — Indexable Club Profile (/clubs/:slug)
  * Ported from the prototype's ClubProfile.tsx with the markup unchanged.
  *
  * Two deliberate differences: the club arrives from the API as a prop, and the

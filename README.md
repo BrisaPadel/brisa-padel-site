@@ -1,6 +1,6 @@
-# Brisa Padel Portal — Next.js
+# Brisa Portal — Next.js
 
-Marketing site for Brisa Padel, migrated from Astro to **Next.js 16 (App Router)**
+Marketing site for Brisa, migrated from Astro to **Next.js 16 (App Router)**
 on the `next-js-setup` branch. The `main` branch still holds the original Astro
 implementation.
 

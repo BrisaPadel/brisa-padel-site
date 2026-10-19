@@ -114,10 +114,10 @@ export function buildMetadata({
       title,
       description,
       url: canonical,
-      siteName: 'Brisa Padel',
+      siteName: 'Brisa',
       locale: lang === 'en' ? 'en_US' : 'es_ES',
       alternateLocale: lang === 'en' ? 'es_ES' : 'en_US',
-      images: [{ url: image, alt: 'Brisa Padel' }]
+      images: [{ url: image, alt: 'Brisa' }]
     },
     twitter: {
       card: 'summary_large_image',

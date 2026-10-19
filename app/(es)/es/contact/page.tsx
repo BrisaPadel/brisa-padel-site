@@ -3,8 +3,8 @@ import ContactPage from '@/components/ContactPage';
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Contacto | Brisa Padel',
-  description: 'Contacta al equipo de membresía de Brisa Padel.',
+  title: 'Contacto | Brisa',
+  description: 'Contacta al equipo de membresía de Brisa.',
   lang: 'es',
   basePath: '/contact'
 });

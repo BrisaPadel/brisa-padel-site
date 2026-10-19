@@ -4,8 +4,8 @@ import { privacyEs } from '@/data/legal';
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Privacidad | Brisa Padel',
-  description: 'Política de privacidad de Brisa Padel.',
+  title: 'Privacidad | Brisa',
+  description: 'Política de privacidad de Brisa.',
   lang: 'es',
   basePath: '/privacy'
 });

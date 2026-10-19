@@ -22,7 +22,7 @@ export default function LegalPage({ lang, kind, sections }: Props) {
       <main className={s}>
         <p className={`${styles.label} ${s}`}>Legal</p>
         <h1 className={s}>{title}</h1>
-        <p className={`${styles.meta} ${s}`}>Kapur Capital LLC d/b/a Brisa Padel</p>
+        <p className={`${styles.meta} ${s}`}>Kapur Capital LLC d/b/a Brisa</p>
         <p className={`${styles.meta} ${styles.m2} ${s}`}>{updated}</p>
         <div className={`${styles.sections} ${s}`}>
           {sections.map((section) => (

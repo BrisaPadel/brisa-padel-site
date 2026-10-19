@@ -3,8 +3,8 @@ import MembershipPage from '@/components/MembershipPage';
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Membership | Brisa Padel',
-  description: 'Apply to Brisa Padel private membership in South Florida.',
+  title: 'Membership | Brisa',
+  description: 'Apply to Brisa private membership in South Florida.',
   lang: 'en',
   basePath: '/membership'
 });
