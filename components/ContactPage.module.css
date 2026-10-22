@@ -1,0 +1,22 @@
+/*
+ * Ported verbatim from ContactPage.astro.
+ * The two #contact-* rules became class selectors (CSS Modules would otherwise
+ * rewrite the id); the id attributes are kept on the elements and nothing else
+ * targets these nodes, so the computed styles are unchanged.
+ */
+.subpage.s { min-height: 100vh; background: #faf8f5; }
+main.s { max-width: 760px; margin: 0 auto; padding: 3.5rem 1.5rem; }
+.label.s { margin: 0 0 .75rem; font-size: .72rem; text-transform: uppercase; letter-spacing: .16em; color: #8b8178; font-weight: 700; }
+h1.s { font-family: "Cormorant Garamond", serif; font-size: clamp(2rem, 5vw, 3.3rem); color:#1c1917; line-height:1.1; margin:0; }
+h1.s em.s { color: var(--brand-orange); font-style: italic; }
+.intro.s { color:#57534e; line-height:1.7; margin: 0 0 1.5rem; }
+.form.s { display:grid; gap:.5rem; }
+label.s { margin-top: .7rem; color:#57534e; font-size:.74rem; font-weight:700; text-transform: uppercase; letter-spacing:.13em; }
+input.s, textarea.s { width:100%; border:1px solid #e8e2da; padding:.8rem .9rem; font: inherit; background:#fff; }
+input.s:focus, textarea.s:focus { outline:none; border-color: var(--brand-orange); }
+small.s { min-height:1rem; color: var(--brand-orange); font-size:.75rem; }
+button.s { margin-top: .8rem; background:var(--brand-orange); color:#fff; border:0; padding: .95rem 1rem; text-transform:uppercase; letter-spacing:.16em; font-weight:800; cursor:pointer; }
+button.s:hover { background: var(--brand-orange-dark); }
+.contact-success.s h2.s { font-family:"Cormorant Garamond", serif; font-size: 2rem; margin-bottom:.4rem; }
+.contact-success.s p.s { color:#57534e; margin-bottom:1rem; }
+.contact-success.s a.s { background:var(--brand-orange); color:#fff; padding:.7rem 1.3rem; text-decoration:none; text-transform:uppercase; font-size:.75rem; letter-spacing:.14em; font-weight:700; }
