@@ -1,6 +1,10 @@
-import 'server-only';
-import { cache } from 'react';
-import { EMPTY_FILTERS, serializeClubFilters, type ClubFilters } from './club-filters';
+import "server-only";
+import { cache } from "react";
+import {
+  EMPTY_FILTERS,
+  serializeClubFilters,
+  type ClubFilters,
+} from "./club-filters";
 
 /** Mirrors PublicClub in brisa-padel-server/src/modules/clubs/types. */
 export type ClubMetaTags = {
@@ -62,8 +66,11 @@ export type Club = {
   vibe: string;
   description: string;
   ownership: string;
-  /** Uploaded gallery in display order; the first is also `heroImageUrl`. */
+  /** Legacy uploaded gallery in display order; the first is a fallback. */
   images: string[];
+  logoImageUrl: string;
+  headerImageUrl: string;
+  cardImageUrl: string;
   heroImageUrl: string;
   sources: ClubSource[];
   metaTags: ClubMetaTags;
@@ -77,7 +84,7 @@ export type Club = {
   country: string;
 };
 
-export const UNVERIFIED = 'Not verified by club';
+export const UNVERIFIED = "Not verified by club";
 
 // Server Components run inside the `brisa-padel-site` container in production,
 // where localhost points back to that container rather than to the API. Both
@@ -85,16 +92,16 @@ export const UNVERIFIED = 'Not verified by club';
 // the safe production default while retaining localhost for local development.
 const API_BASE_URL =
   process.env.CLUBS_API_BASE_URL ??
-  (process.env.NODE_ENV === 'production'
-    ? 'http://brisa_server:8000'
-    : 'http://localhost:8000');
+  (process.env.NODE_ENV === "production"
+    ? "http://brisa_server:8000"
+    : "http://localhost:8000");
 
 async function getJson<T>(path: string): Promise<T | null> {
   try {
     const response = await fetch(`${API_BASE_URL}${path}`, {
       // Rendered fresh on every request, so a console edit is live immediately.
-      cache: 'no-store',
-      headers: { accept: 'application/json' }
+      cache: "no-store",
+      headers: { accept: "application/json" },
     });
     if (!response.ok) return null;
     const payload = (await response.json()) as { success?: boolean; data?: T };
@@ -107,29 +114,31 @@ async function getJson<T>(path: string): Promise<T | null> {
 }
 
 export async function listClubs(
-  filters: Partial<ClubFilters> & { limit?: number } = {}
+  filters: Partial<ClubFilters> & { limit?: number } = {},
 ): Promise<{ clubs: Club[]; total: number }> {
   // The same serializer the browser and the address bar use, so the first
   // server-rendered page cannot be built from different filters than the ones
   // the URL advertises.
   const search = new URLSearchParams(
-    serializeClubFilters({ ...EMPTY_FILTERS, ...filters })
+    serializeClubFilters({ ...EMPTY_FILTERS, ...filters }),
   );
-  search.set('limit', String(filters.limit ?? 24));
-  const data = await getJson<{ clubs: Club[]; total: number }>(`/api/clubs?${search.toString()}`);
+  search.set("limit", String(filters.limit ?? 24));
+  const data = await getJson<{ clubs: Club[]; total: number }>(
+    `/api/clubs?${search.toString()}`,
+  );
   return { clubs: data?.clubs ?? [], total: data?.total ?? 0 };
 }
 
 export async function listClubReviews(slug: string): Promise<ClubReview[]> {
   const data = await getJson<{ reviews: ClubReview[] }>(
-    `/api/clubs/${encodeURIComponent(slug)}/reviews`
+    `/api/clubs/${encodeURIComponent(slug)}/reviews`,
   );
   return data?.reviews ?? [];
 }
 
 /** Every published slug — used by the sitemap, which needs all of them. */
 export async function listClubSlugs(): Promise<string[]> {
-  const data = await getJson<{ slugs: string[] }>('/api/clubs/slugs');
+  const data = await getJson<{ slugs: string[] }>("/api/clubs/slugs");
   return data?.slugs ?? [];
 }
 
@@ -141,6 +150,8 @@ export async function listClubSlugs(): Promise<string[]> {
  * is hit twice for every club page a crawler visits.
  */
 export const getClub = cache(async (slug: string): Promise<Club | null> => {
-  const data = await getJson<{ club: Club }>(`/api/clubs/${encodeURIComponent(slug)}`);
+  const data = await getJson<{ club: Club }>(
+    `/api/clubs/${encodeURIComponent(slug)}`,
+  );
   return data?.club ?? null;
 });
